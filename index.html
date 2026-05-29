@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Cubi Pazzi</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght=400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-dark: #080b11;
@@ -67,11 +67,11 @@
             background: #0b0e14; 
             border-top: 2px solid var(--panel-border);
             padding: 12px 20px; 
-            display: none; /* Gestito da JS */
+            display: none;
             justify-content: space-around; 
             align-items: center;
             gap: 15px; 
-            z-index: 20; /* Sopra il canvas e le sfondi */
+            z-index: 20;
             height: 80px; 
             box-sizing: border-box;
         }
@@ -164,6 +164,7 @@
         <div class="ui-layer">
             <div class="stat-box">Punti: <span id="score">0</span></div>
             <div class="stat-box coins">🪙 <span id="coins">0</span></div>
+            <div class="stat-box coins">🏆 <span id="trophies">0</span></div>
         </div>
 
         <canvas id="gameCanvas"></canvas>
@@ -182,6 +183,8 @@
         <div id="main-menu" class="screen">
             <div class="menu-main">
                 <div class="logo-box"><h1 id="menu-title">CUBI PAZZI</h1></div>
+                <!-- DASHBOARD INSERITA QUI VIA JAVASCRIPT -->
+                <div id="dashboard-container"></div>
                 <div class="menu-actions">
                     <button class="btn" onclick="showControlSelection()">AVVIA PARTITA</button>
                     <button class="btn btn-missions" onclick="openMissions()">BACHECA MISSIONI</button>
@@ -247,8 +250,10 @@
                 <div class="logo-box" style="border-color: var(--neon-rose);"><h1 style="background: linear-gradient(135deg, #ef4444, #b91c1c); -webkit-background-clip: text;">GAME OVER</h1></div>
                 <div style="font-size: 1.5rem; font-weight: 700;">
                     Punteggio Partita: <span id="final-score" style="color: var(--neon-blue);">0</span><br>
-                    Monete Raccolte: <span id="final-match-coins" style="color: var(--neon-gold);">0</span>
+                    Monete Raccolte: <span id="final-match-coins" style="color: var(--neon-gold);">0</span><br>
+                    Trofei Guadagnati: <span id="final-match-trophies" style="color: #ffd700;">0</span>
                     <span id="new-record-tag" style="color: var(--neon-gold); display: none; font-size: 1.2rem; letter-spacing: 1px;"><br>🏆 NUOVO RECORD!</span>
+                    <span id="reward-tag" style="color: var(--neon-green); display: none; font-size: 0.9rem; margin-top: 8px;"><br></span>
                 </div>
                 <div class="menu-actions"><button class="btn" onclick="backToMenuFromGameOver()">TORNA AL MENU</button></div>
             </div>
@@ -274,6 +279,12 @@
         
         let inventoryShields = parseInt(localStorage.getItem('cp_inv_shields')) || 0;
         let inventorySlows = parseInt(localStorage.getItem('cp_inv_slows')) || 0;
+        
+        // TROPHY SYSTEM
+        let totalTrophies = parseInt(localStorage.getItem('cp_trophies')) || 0;
+        let unlockedRewards = JSON.parse(localStorage.getItem('cp_unlocked_rewards')) || {};
+        let lastTrophyCheckpoint = 0;
+        let currentMatchTrophies = 0;
         
         let activeShield = false;
         let activeSlowTime = false;
@@ -314,17 +325,88 @@
         let touchStartPos = { x: 0, y: 0 }; let playerStartPos = { x: 0, y: 0 }; let isDragging = false;
         let mousePos = { x: 240, y: 500 }; let isMouseMoving = false;
 
+        // DASHBOARD RENDERING (BRAWL STARS STYLE)
+        function renderDashboard() {
+            const container = document.getElementById('dashboard-container');
+            container.innerHTML = '';
+            
+            const dashboard = document.createElement('div');
+            dashboard.style.cssText = 'background: linear-gradient(135deg, rgba(26, 35, 54, 0.8), rgba(17, 22, 34, 0.8)); border: 1px solid var(--panel-border); border-radius: 16px; padding: 16px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; width: 100%; box-sizing: border-box; backdrop-filter: blur(10px);';
+            
+            // STAT 1: Trofei
+            const trophyCard = document.createElement('div');
+            trophyCard.style.cssText = 'background: rgba(255, 215, 0, 0.1); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 12px; padding: 12px; text-align: center;';
+            trophyCard.innerHTML = `<div style="font-size: 1.8rem; margin-bottom: 4px;">🏆</div><div style="font-size: 0.75rem; color: #9ca3af; margin-bottom: 4px;">TROFEI</div><div style="font-size: 1.3rem; font-weight: 700; color: #ffd700;">${totalTrophies}</div>`;
+            dashboard.appendChild(trophyCard);
+            
+            // STAT 2: Migliore Partita
+            const recordCard = document.createElement('div');
+            recordCard.style.cssText = 'background: rgba(0, 240, 255, 0.1); border: 1px solid rgba(0, 240, 255, 0.3); border-radius: 12px; padding: 12px; text-align: center;';
+            recordCard.innerHTML = `<div style="font-size: 1.8rem; margin-bottom: 4px;">📊</div><div style="font-size: 0.75rem; color: #9ca3af; margin-bottom: 4px;">RECORD</div><div style="font-size: 1.3rem; font-weight: 700; color: var(--neon-blue);">${highScore}</div>`;
+            dashboard.appendChild(recordCard);
+            
+            // STAT 3: Skin Sblocate
+            const skinsCard = document.createElement('div');
+            skinsCard.style.cssText = 'background: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 12px; padding: 12px; text-align: center;';
+            skinsCard.innerHTML = `<div style="font-size: 1.8rem; margin-bottom: 4px;">✨</div><div style="font-size: 0.75rem; color: #9ca3af; margin-bottom: 4px;">SKIN</div><div style="font-size: 1.3rem; font-weight: 700; color: var(--neon-purple);">${ownedSkins.length}/8</div>`;
+            dashboard.appendChild(skinsCard);
+            
+            container.appendChild(dashboard);
+        }
+
+        // MILESTONE REWARDS SYSTEM
+        const rewardMilestones = [
+            { trophies: 15, id: 'shield_15', reward: () => { inventoryShields++; return '🛡️ 1 Scudo debloccato!'; } },
+            { trophies: 30, id: 'slow_30', reward: () => { inventorySlows++; return '🟣 1 Rallenta Tempo debloccato!'; } },
+            { trophies: 50, id: 'coins_50', reward: () => { coins += 50; return '🪙 +50 Monete BONUS!'; } },
+            { trophies: 100, id: 'emerald_100', reward: () => { if (!ownedSkins.includes('emerald')) ownedSkins.push('emerald'); return '✨ Skin Smeraldo sbloccata!'; } }
+        ];
+
+        function checkTrophyMilestones() {
+            let newRewards = [];
+            rewardMilestones.forEach(r => {
+                if (totalTrophies >= r.trophies && !unlockedRewards[r.id]) {
+                    unlockedRewards[r.id] = true;
+                    newRewards.push(r.reward());
+                }
+            });
+            
+            if (newRewards.length > 0) {
+                saveData();
+                return newRewards.join(" ");
+            }
+            return "";
+        }
+
+        function addTrophies(amount) {
+            totalTrophies += amount;
+            document.getElementById('trophies').innerText = totalTrophies;
+            saveData();
+            const rewards = checkTrophyMilestones();
+            if (rewards) showRewardNotification(rewards);
+        }
+
+        function showRewardNotification(text) {
+            const overlay = document.createElement('div');
+            overlay.style.cssText = 'position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,0.95); color:#10b981; padding:24px 40px; border-radius:18px; z-index:1000; font-weight:700; font-size:1.2rem; border:2px solid #10b981; white-space:nowrap; pointer-events:none; box-shadow: 0 0 30px rgba(16,185,129,0.4);';
+            overlay.innerText = text;
+            document.body.appendChild(overlay);
+            setTimeout(() => overlay.remove(), 3500);
+        }
+
         function updateMenuHighScoreDisplay() {
             document.getElementById('menu-title').innerHTML = highScore > 0 ? `CUBI PAZZI<br><span style="font-size:1.2rem; color:var(--neon-blue);">RECORD: ${highScore}</span>` : `CUBI PAZZI`;
         }
         updateMenuHighScoreDisplay();
+        renderDashboard();
         document.getElementById('coins').innerText = coins;
+        document.getElementById('trophies').innerText = totalTrophies;
 
         // Ridimensionamento dinamico del canvas per lasciare spazio alla barra in partita
         function resizeCanvas() { 
             canvas.width = canvas.clientWidth; 
             if (gameActive) {
-                canvas.height = canvas.clientHeight - 80; // Sottrae lo spazio esatto dei pulsanti
+                canvas.height = canvas.clientHeight - 80;
             } else {
                 canvas.height = canvas.clientHeight;
             }
@@ -354,6 +436,8 @@
             localStorage.setItem('cp_msn_stats', JSON.stringify(msnStats));
             localStorage.setItem('cp_msn_states', JSON.stringify(msnStates));
             localStorage.setItem('cp_msn_daily', JSON.stringify(msnDailyCounters));
+            localStorage.setItem('cp_trophies', totalTrophies);
+            localStorage.setItem('cp_unlocked_rewards', JSON.stringify(unlockedRewards));
         }
 
         function updateMissionProgress() {
@@ -500,7 +584,7 @@
                 if(!ownedSkins.includes('goldskin')) { rewardText = "👑 SKIN ORO PURO!"; ownedSkins.push('goldskin'); } 
                 else { rewardText = "🟣 CONVERTITO IN RALLENTA X3"; inventorySlows += 3; }
             }
-            displayElement.innerText = rewardText; saveData(); updateShopUI(); renderShopSkins();
+            displayElement.innerText = rewardText; saveData(); updateShopUI(); renderShopSkins(); renderDashboard();
         }
 
         function renderShopSkins() {
@@ -519,7 +603,7 @@
             });
         }
 
-        function buySkin(id, cost) { if (coins >= cost && !ownedSkins.includes(id)) { coins -= cost; ownedSkins.push(id); currentSkinId = id; saveData(); renderShopSkins(); updateShopUI(); } }
+        function buySkin(id, cost) { if (coins >= cost && !ownedSkins.includes(id)) { coins -= cost; ownedSkins.push(id); currentSkinId = id; saveData(); renderShopSkins(); updateShopUI(); renderDashboard(); } }
         function equipSkin(id) { if (ownedSkins.includes(id)) { currentSkinId = id; saveData(); renderShopSkins(); updateShopUI(); } }
 
         function updateShopUI() {
@@ -545,22 +629,22 @@
 
         function startGame(mode) {
             checkDailyReset(); controlMode = mode; controlMenu.style.display = 'none'; isDragging = false; isMouseMoving = false;
-            score = 0; currentMatchCoins = 0; usedShieldInMatch = false;
+            score = 0; currentMatchCoins = 0; usedShieldInMatch = false; currentMatchTrophies = 0; lastTrophyCheckpoint = 0;
             enemies = []; goldCoins = []; powerUps = []; playerTrail = []; particles = [];
             magnetTimer = 0; activeShield = false; activeSlowTime = false; slowTimeTimer = 0;
 
             gameActive = true;
-            resizeCanvas(); // Calcola le dimensioni corrette col pannello attivo
+            resizeCanvas();
             
             player.x = canvas.width / 2; player.y = canvas.height - 120;
             mousePos.x = player.x; mousePos.y = player.y;
             
             document.getElementById('score').innerText = score;
             document.getElementById('coins').innerText = coins;
+            document.getElementById('trophies').innerText = totalTrophies;
             document.getElementById('slot-shield-count').innerText = "x" + inventoryShields;
             document.getElementById('slot-slow-count').innerText = "x" + inventorySlows;
             
-            // RENDI VISIBILE LA BARRA DEI POTERI ADESSO
             ingameUI.style.display = 'flex';
 
             msnDailyCounters.gamesToday++; updateMissionProgress(); animate();
@@ -568,7 +652,6 @@
 
         function gameOver() {
             gameActive = false;
-            // NASCONDI LA BARRA AL GAME OVER
             ingameUI.style.display = 'none';
             
             let isNewRecord = false; if (score > highScore) { highScore = score; isNewRecord = true; }
@@ -581,11 +664,21 @@
             
             document.getElementById('final-score').innerText = score;
             document.getElementById('final-match-coins').innerText = currentMatchCoins;
+            document.getElementById('final-match-trophies').innerText = currentMatchTrophies;
             document.getElementById('new-record-tag').style.display = isNewRecord ? 'inline' : 'none';
+            
+            const rewardMsg = checkTrophyMilestones();
+            if (rewardMsg) {
+                document.getElementById('reward-tag').innerText = "🎉 PREMIO SBLOCCATO: " + rewardMsg;
+                document.getElementById('reward-tag').style.display = 'inline';
+            } else {
+                document.getElementById('reward-tag').style.display = 'none';
+            }
+            
             gameoverMenu.style.display = 'flex';
         }
 
-        function backToMenuFromGameOver() { gameoverMenu.style.display = 'none'; updateMenuHighScoreDisplay(); mainMenu.style.display = 'flex'; }
+        function backToMenuFromGameOver() { gameoverMenu.style.display = 'none'; updateMenuHighScoreDisplay(); renderDashboard(); mainMenu.style.display = 'flex'; }
 
         let rainbowHue = 0;
         function animate() {
@@ -596,6 +689,15 @@
             if (activeSlowTime) { slowTimeTimer--; if(slowTimeTimer <= 0) activeSlowTime = false; }
             let speedModifier = activeSlowTime ? 0.5 : 1.0; 
             if (magnetTimer > 0) magnetTimer--;
+
+            // TROPHY CALCULATION: Every 10 points = 5 trophies
+            let currentTrophyCheckpoint = Math.floor(score / 10) * 10;
+            if (currentTrophyCheckpoint > lastTrophyCheckpoint) {
+                let newTrophies = 5;
+                currentMatchTrophies += newTrophies;
+                addTrophies(newTrophies);
+                lastTrophyCheckpoint = currentTrophyCheckpoint;
+            }
 
             if (controlMode === 'keyboard') {
                 if (isMouseMoving) {
