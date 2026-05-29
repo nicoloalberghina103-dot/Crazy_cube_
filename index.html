@@ -156,6 +156,104 @@
         .btn-claim { background: linear-gradient(135deg, var(--neon-gold), #d97706); color: #080b11; border: none; padding: 8px 14px; border-radius: 10px; font-weight: 700; font-size: 0.8rem; cursor: pointer; box-shadow: 0 0 10px rgba(255,183,0,0.3); transition: transform 0.1s; }
         .btn-claim:active { transform: scale(0.95); }
         .btn-claimed { background: #192030; color: #4b5563; border: 1px solid #28334a; padding: 8px 14px; border-radius: 10px; font-weight: 700; font-size: 0.75rem; cursor: not-allowed; text-align: center; min-width: 80px; box-sizing: border-box; }
+
+        /* Pulsante profilo — angolo menu principale */
+        #main-menu { padding-top: 20px; }
+        .menu-profile-btn {
+            position: absolute; top: 18px; right: 18px; z-index: 35;
+            width: 58px; height: 58px; border-radius: 50%; border: none; cursor: pointer;
+            background: linear-gradient(145deg, #1e2840, #111622);
+            border: 2px solid rgba(255, 215, 0, 0.45);
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45), 0 0 12px rgba(255, 215, 0, 0.12);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+            transition: transform 0.15s ease;
+        }
+        .menu-profile-btn:active { transform: scale(0.92); }
+        .menu-profile-btn .profile-icon { font-size: 1.35rem; line-height: 1; }
+        .menu-profile-btn .profile-trophies { font-size: 0.72rem; font-weight: 700; color: #ffd700; }
+
+        /* Percorso trofei — timeline verticale */
+        #trophy-road-menu { padding: 18px 0 20px; justify-content: flex-start; }
+        .profile-header {
+            flex-shrink: 0; padding: 0 20px 14px; border-bottom: 1px solid var(--panel-border);
+            display: flex; align-items: center; gap: 14px; text-align: left;
+        }
+        .profile-avatar {
+            width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0;
+            background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(245,158,11,0.1));
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            display: flex; align-items: center; justify-content: center; font-size: 1.6rem;
+        }
+        .profile-info h2 { margin: 0 0 4px; font-size: 1.15rem; color: #fff; }
+        .profile-info .profile-total { font-size: 1.5rem; font-weight: 700; color: #ffd700; line-height: 1.1; }
+        .profile-info .profile-sub { font-size: 0.78rem; color: #9ca3af; margin-top: 4px; line-height: 1.35; }
+        .profile-progress-wrap { margin-top: 8px; }
+        .profile-progress-bar { background: #090d16; border-radius: 999px; height: 8px; overflow: hidden; border: 1px solid #1f293d; }
+        .profile-progress-fill { height: 100%; background: linear-gradient(90deg, #f59e0b, #ffd700); border-radius: 999px; transition: width 0.4s ease; }
+
+        .road-list-wrap {
+            flex: 1; overflow-y: auto; overflow-x: hidden; margin: 12px 0;
+            padding: 4px 16px; -webkit-overflow-scrolling: touch; touch-action: pan-y;
+        }
+        .road-list-wrap::-webkit-scrollbar { width: 4px; }
+        .road-list-wrap::-webkit-scrollbar-thumb { background: rgba(255, 215, 0, 0.3); border-radius: 4px; }
+
+        .tr-here-marker {
+            display: flex; align-items: center; gap: 10px; margin: 10px 0 14px 0;
+            padding: 10px 14px; border-radius: 14px;
+            background: linear-gradient(90deg, rgba(255,215,0,0.15), rgba(255,215,0,0.05));
+            border: 1px solid rgba(255, 215, 0, 0.45);
+        }
+        .tr-here-marker .here-dot { width: 10px; height: 10px; border-radius: 50%; background: #ffd700; box-shadow: 0 0 10px #ffd700; flex-shrink: 0; animation: pulse-here 1.5s ease infinite; }
+        @keyframes pulse-here { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; transform: scale(0.85); } }
+        .tr-here-marker .here-text { font-size: 0.82rem; font-weight: 700; color: #fde68a; text-align: left; }
+
+        .tr-item {
+            display: flex; gap: 12px; margin-bottom: 0; position: relative;
+        }
+        .tr-rail {
+            width: 44px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center;
+        }
+        .tr-cup {
+            width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+            background: #111622; border: 2px solid #28334a;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.72rem; font-weight: 700; color: #9ca3af; z-index: 1;
+        }
+        .tr-line { width: 3px; flex: 1; min-height: 12px; background: #1f293d; margin: 2px 0; }
+        .tr-line.done { background: linear-gradient(180deg, #10b981, #f59e0b); }
+        .tr-item:last-child .tr-line { display: none; }
+
+        .tr-card {
+            flex: 1; margin-bottom: 14px; padding: 12px 14px; border-radius: 14px;
+            background: var(--panel-bg); border: 1px solid var(--panel-border);
+            display: flex; align-items: center; gap: 12px; text-align: left;
+        }
+        .tr-card .tr-icon { font-size: 1.6rem; flex-shrink: 0; width: 36px; text-align: center; }
+        .tr-card .tr-body { flex: 1; min-width: 0; }
+        .tr-card .tr-name { font-size: 0.92rem; font-weight: 700; color: #fff; margin-bottom: 2px; }
+        .tr-card .tr-status { font-size: 0.72rem; font-weight: 700; color: #5c6b84; }
+        .tr-badge {
+            font-size: 0.62rem; font-weight: 700; padding: 4px 8px; border-radius: 8px;
+            flex-shrink: 0; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        .tr-item.claimed .tr-cup { border-color: #10b981; color: #10b981; background: rgba(16,185,129,0.12); }
+        .tr-item.claimed .tr-card { border-color: rgba(16,185,129,0.35); opacity: 0.85; }
+        .tr-item.claimed .tr-status { color: #10b981; }
+        .tr-item.claimed .tr-badge { background: rgba(16,185,129,0.2); color: #10b981; }
+
+        .tr-item.next .tr-cup { border-color: #00f0ff; color: #00f0ff; background: rgba(0,240,255,0.1); box-shadow: 0 0 12px rgba(0,240,255,0.2); }
+        .tr-item.next .tr-card { border-color: rgba(0,240,255,0.45); background: #121a2a; box-shadow: 0 0 16px rgba(0,240,255,0.08); }
+        .tr-item.next .tr-status { color: #67e8f9; }
+        .tr-item.next .tr-badge { background: rgba(0,240,255,0.15); color: #00f0ff; }
+
+        .tr-item.locked .tr-card { opacity: 0.55; }
+        .tr-item.locked .tr-badge { background: #192030; color: #4b5563; }
+        .tr-item.legend .tr-card { border-color: rgba(168,85,247,0.5); background: linear-gradient(135deg, rgba(30,21,53,0.9), rgba(17,22,34,0.9)); }
+        .tr-item.legend .tr-cup { border-color: #a855f7; color: #d8b4fe; }
+
+        #trophy-road-menu .btn-back { margin: 0 20px; width: calc(100% - 40px); flex-shrink: 0; }
     </style>
 </head>
 <body>
@@ -181,10 +279,12 @@
         </div>
         
         <div id="main-menu" class="screen">
+            <button type="button" class="menu-profile-btn" onclick="openTrophyRoad()" title="Profilo e percorso trofei">
+                <span class="profile-icon">🏆</span>
+                <span class="profile-trophies" id="profile-trophy-badge">0</span>
+            </button>
             <div class="menu-main">
                 <div class="logo-box"><h1 id="menu-title">CUBI PAZZI</h1></div>
-                <!-- DASHBOARD INSERITA QUI VIA JAVASCRIPT -->
-                <div id="dashboard-container"></div>
                 <div class="menu-actions">
                     <button class="btn" onclick="showControlSelection()">AVVIA PARTITA</button>
                     <button class="btn btn-missions" onclick="openMissions()">BACHECA MISSIONI</button>
@@ -245,6 +345,24 @@
             <button class="btn btn-back" onclick="closeMissions()">CHIUDI BACHECA</button>
         </div>
 
+        <div id="trophy-road-menu" class="screen" style="display: none;">
+            <div class="profile-header">
+                <div class="profile-avatar">🏆</div>
+                <div class="profile-info">
+                    <h2>Percorso Trofei</h2>
+                    <div class="profile-total"><span id="road-trophy-count">0</span> coppe</div>
+                    <div class="profile-sub" id="road-next-hint"></div>
+                    <div class="profile-progress-wrap">
+                        <div class="profile-progress-bar"><div class="profile-progress-fill" id="road-progress-fill" style="width:0%"></div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="road-list-wrap" id="road-list-wrap">
+                <div id="road-list"></div>
+            </div>
+            <button class="btn btn-back" onclick="closeTrophyRoad()">CHIUDI</button>
+        </div>
+
         <div id="gameover-menu" class="screen" style="display: none; background: rgba(8, 11, 17, 0.95);">
             <div class="menu-main">
                 <div class="logo-box" style="border-color: var(--neon-rose);"><h1 style="background: linear-gradient(135deg, #ef4444, #b91c1c); -webkit-background-clip: text;">GAME OVER</h1></div>
@@ -267,6 +385,7 @@
         const controlMenu = document.getElementById('control-menu');
         const shopMenu = document.getElementById('shop-menu');
         const msnMenu = document.getElementById('missions-menu');
+        const trophyRoadMenu = document.getElementById('trophy-road-menu');
         const gameoverMenu = document.getElementById('gameover-menu');
         const ingameUI = document.getElementById('ingame-ui');
         
@@ -281,7 +400,7 @@
         let inventorySlows = parseInt(localStorage.getItem('cp_inv_slows')) || 0;
         
         // TROPHY SYSTEM
-        let totalTrophies = parseInt(localStorage.getItem('cp_trophies')) || 0;
+        let totalTrophies = Math.min(100000, parseInt(localStorage.getItem('cp_trophies')) || 0);
         let unlockedRewards = JSON.parse(localStorage.getItem('cp_unlocked_rewards')) || {};
         let lastTrophyCheckpoint = 0;
         let currentMatchTrophies = 0;
@@ -325,41 +444,168 @@
         let touchStartPos = { x: 0, y: 0 }; let playerStartPos = { x: 0, y: 0 }; let isDragging = false;
         let mousePos = { x: 240, y: 500 }; let isMouseMoving = false;
 
-        // DASHBOARD RENDERING (BRAWL STARS STYLE)
-        function renderDashboard() {
-            const container = document.getElementById('dashboard-container');
-            container.innerHTML = '';
-            
-            const dashboard = document.createElement('div');
-            dashboard.style.cssText = 'background: linear-gradient(135deg, rgba(26, 35, 54, 0.8), rgba(17, 22, 34, 0.8)); border: 1px solid var(--panel-border); border-radius: 16px; padding: 16px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; width: 100%; box-sizing: border-box; backdrop-filter: blur(10px);';
-            
-            // STAT 1: Trofei
-            const trophyCard = document.createElement('div');
-            trophyCard.style.cssText = 'background: rgba(255, 215, 0, 0.1); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 12px; padding: 12px; text-align: center;';
-            trophyCard.innerHTML = `<div style="font-size: 1.8rem; margin-bottom: 4px;">🏆</div><div style="font-size: 0.75rem; color: #9ca3af; margin-bottom: 4px;">TROFEI</div><div style="font-size: 1.3rem; font-weight: 700; color: #ffd700;">${totalTrophies}</div>`;
-            dashboard.appendChild(trophyCard);
-            
-            // STAT 2: Migliore Partita
-            const recordCard = document.createElement('div');
-            recordCard.style.cssText = 'background: rgba(0, 240, 255, 0.1); border: 1px solid rgba(0, 240, 255, 0.3); border-radius: 12px; padding: 12px; text-align: center;';
-            recordCard.innerHTML = `<div style="font-size: 1.8rem; margin-bottom: 4px;">📊</div><div style="font-size: 0.75rem; color: #9ca3af; margin-bottom: 4px;">RECORD</div><div style="font-size: 1.3rem; font-weight: 700; color: var(--neon-blue);">${highScore}</div>`;
-            dashboard.appendChild(recordCard);
-            
-            // STAT 3: Skin Sblocate
-            const skinsCard = document.createElement('div');
-            skinsCard.style.cssText = 'background: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 12px; padding: 12px; text-align: center;';
-            skinsCard.innerHTML = `<div style="font-size: 1.8rem; margin-bottom: 4px;">✨</div><div style="font-size: 0.75rem; color: #9ca3af; margin-bottom: 4px;">SKIN</div><div style="font-size: 1.3rem; font-weight: 700; color: var(--neon-purple);">${ownedSkins.length}/8</div>`;
-            dashboard.appendChild(skinsCard);
-            
-            container.appendChild(dashboard);
+        // DASHBOARD / PROFILO
+        function updateProfileBadge() {
+            const badge = document.getElementById('profile-trophy-badge');
+            if (badge) badge.innerText = formatTrophies(totalTrophies);
         }
 
-        // MILESTONE REWARDS SYSTEM
+        function formatTrophies(n) {
+            if (n >= 100000) return '100K';
+            if (n >= 1000) return (n / 1000).toFixed(n % 1000 === 0 ? 0 : 1).replace('.0', '') + 'K';
+            return String(n);
+        }
+
+        function getNextMilestone() {
+            return rewardMilestones.find(m => totalTrophies < m.trophies) || rewardMilestones[rewardMilestones.length - 1];
+        }
+
+        function getPrevMilestone() {
+            let prev = rewardMilestones[0];
+            for (const m of rewardMilestones) {
+                if (m.trophies <= totalTrophies) prev = m;
+                else break;
+            }
+            return prev;
+        }
+
+        function openTrophyRoad() {
+            mainMenu.style.display = 'none';
+            trophyRoadMenu.style.display = 'flex';
+            renderTrophyRoad();
+        }
+
+        function closeTrophyRoad() {
+            trophyRoadMenu.style.display = 'none';
+            mainMenu.style.display = 'flex';
+            updateProfileBadge();
+        }
+
+        function renderTrophyRoad() {
+            document.getElementById('road-trophy-count').innerText = totalTrophies.toLocaleString('it-IT');
+
+            const next = getNextMilestone();
+            const prev = getPrevMilestone();
+            const atMax = totalTrophies >= 100000;
+            const hintEl = document.getElementById('road-next-hint');
+            const fillEl = document.getElementById('road-progress-fill');
+
+            if (atMax) {
+                hintEl.innerText = 'Leggenda assoluta — hai raggiunto 100.000 coppe!';
+                fillEl.style.width = '100%';
+            } else {
+                const remaining = next.trophies - totalTrophies;
+                hintEl.innerText = `Prossimo: ${next.icon} ${next.label} · mancano ${remaining.toLocaleString('it-IT')} coppe`;
+                const pct = next.trophies > prev.trophies
+                    ? Math.min(100, Math.max(0, ((totalTrophies - prev.trophies) / (next.trophies - prev.trophies)) * 100))
+                    : 0;
+                fillEl.style.width = pct + '%';
+            }
+
+            const list = document.getElementById('road-list');
+            list.innerHTML = '';
+            let markerInserted = false;
+
+            rewardMilestones.forEach((m, i) => {
+                if (!markerInserted && totalTrophies < m.trophies) {
+                    const marker = document.createElement('div');
+                    marker.className = 'tr-here-marker';
+                    marker.innerHTML = `<div class="here-dot"></div><div class="here-text">Sei qui · ${totalTrophies.toLocaleString('it-IT')} coppe</div>`;
+                    list.appendChild(marker);
+                    markerInserted = true;
+                }
+
+                const claimed = !!unlockedRewards[m.id];
+                const isNext = !atMax && next.id === m.id;
+                const isLocked = !claimed && totalTrophies < m.trophies && !isNext;
+                const isLegend = m.trophies >= 50000;
+                const lineDone = totalTrophies >= m.trophies;
+
+                let itemClass = 'tr-item';
+                if (claimed) itemClass += ' claimed';
+                else if (isNext) itemClass += ' next';
+                else if (isLocked) itemClass += ' locked';
+                if (isLegend) itemClass += ' legend';
+
+                let statusText, badgeText;
+                if (claimed) {
+                    statusText = 'Premio ottenuto';
+                    badgeText = '✓ Preso';
+                } else if (isNext) {
+                    statusText = `Mancano ${(m.trophies - totalTrophies).toLocaleString('it-IT')} coppe`;
+                    badgeText = 'Prossimo';
+                } else if (totalTrophies >= m.trophies) {
+                    statusText = 'Sbloccato';
+                    badgeText = 'Nuovo';
+                } else {
+                    statusText = `Richiede ${m.trophies.toLocaleString('it-IT')} coppe`;
+                    badgeText = 'Bloccato';
+                }
+
+                const item = document.createElement('div');
+                item.className = itemClass;
+                item.innerHTML = `
+                    <div class="tr-rail">
+                        <div class="tr-cup">${formatTrophies(m.trophies)}</div>
+                        ${i < rewardMilestones.length - 1 ? `<div class="tr-line${lineDone ? ' done' : ''}"></div>` : ''}
+                    </div>
+                    <div class="tr-card">
+                        <div class="tr-icon">${m.icon}</div>
+                        <div class="tr-body">
+                            <div class="tr-name">${m.label}</div>
+                            <div class="tr-status">${statusText}</div>
+                        </div>
+                        <div class="tr-badge">${badgeText}</div>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+
+            if (!markerInserted && atMax) {
+                const marker = document.createElement('div');
+                marker.className = 'tr-here-marker';
+                marker.innerHTML = `<div class="here-dot"></div><div class="here-text">Leggenda · 100.000 coppe raggiunte!</div>`;
+                list.appendChild(marker);
+            }
+
+            requestAnimationFrame(() => {
+                const wrap = document.getElementById('road-list-wrap');
+                const here = list.querySelector('.tr-here-marker');
+                if (here && wrap) {
+                    here.scrollIntoView({ block: 'center', behavior: 'auto' });
+                }
+            });
+        }
+
+        // PERCORSO TROFEI — premi fino a 100.000 coppe
         const rewardMilestones = [
-            { trophies: 15, id: 'shield_15', reward: () => { inventoryShields++; return '🛡️ 1 Scudo debloccato!'; } },
-            { trophies: 30, id: 'slow_30', reward: () => { inventorySlows++; return '🟣 1 Rallenta Tempo debloccato!'; } },
-            { trophies: 50, id: 'coins_50', reward: () => { coins += 50; return '🪙 +50 Monete BONUS!'; } },
-            { trophies: 100, id: 'emerald_100', reward: () => { if (!ownedSkins.includes('emerald')) ownedSkins.push('emerald'); return '✨ Skin Smeraldo sbloccata!'; } }
+            { trophies: 15,    id: 'r_15',     icon: '🛡️', label: 'Scudo x1',        reward: () => { inventoryShields++; return '🛡️ Scudo sbloccato!'; } },
+            { trophies: 30,    id: 'r_30',     icon: '🟣', label: 'Rallenta x1',     reward: () => { inventorySlows++; return '🟣 Rallenta sbloccato!'; } },
+            { trophies: 50,    id: 'r_50',     icon: '🪙', label: '+50 monete',      reward: () => { coins += 50; return '🪙 +50 monete!'; } },
+            { trophies: 100,   id: 'r_100',    icon: '💚', label: 'Skin Smeraldo',   reward: () => { if (!ownedSkins.includes('emerald')) ownedSkins.push('emerald'); return '💚 Skin Smeraldo!'; } },
+            { trophies: 200,   id: 'r_200',    icon: '🪙', label: '+100 monete',     reward: () => { coins += 100; return '🪙 +100 monete!'; } },
+            { trophies: 350,   id: 'r_350',    icon: '❤️', label: 'Skin Rubino',     reward: () => { if (!ownedSkins.includes('ruby')) ownedSkins.push('ruby'); return '❤️ Skin Rubino!'; } },
+            { trophies: 500,   id: 'r_500',    icon: '🛡️', label: 'Scudo x2',        reward: () => { inventoryShields += 2; return '🛡️ Scudo x2!'; } },
+            { trophies: 750,   id: 'r_750',    icon: '🪙', label: '+150 monete',     reward: () => { coins += 150; return '🪙 +150 monete!'; } },
+            { trophies: 1000,  id: 'r_1k',     icon: '🟠', label: 'Skin Ambra',      reward: () => { if (!ownedSkins.includes('amber')) ownedSkins.push('amber'); return '🟠 Skin Ambra!'; } },
+            { trophies: 1500,  id: 'r_1500',   icon: '🟣', label: 'Rallenta x3',     reward: () => { inventorySlows += 3; return '🟣 Rallenta x3!'; } },
+            { trophies: 2000,  id: 'r_2k',     icon: '⚡', label: 'Skin Fulmine',    reward: () => { if (!ownedSkins.includes('electric')) ownedSkins.push('electric'); return '⚡ Skin Fulmine!'; } },
+            { trophies: 3000,  id: 'r_3k',     icon: '🪙', label: '+300 monete',     reward: () => { coins += 300; return '🪙 +300 monete!'; } },
+            { trophies: 4500,  id: 'r_4500',   icon: '🔮', label: 'Skin Vuoto',      reward: () => { if (!ownedSkins.includes('void')) ownedSkins.push('void'); return '🔮 Skin Vuoto!'; } },
+            { trophies: 6000,  id: 'r_6k',     icon: '🛡️', label: 'Scudo x5',        reward: () => { inventorySlows += 2; inventoryShields += 5; return '🛡️ Scudo x5!'; } },
+            { trophies: 8000,  id: 'r_8k',     icon: '🪙', label: '+800 monete',     reward: () => { coins += 800; return '🪙 +800 monete!'; } },
+            { trophies: 10000, id: 'r_10k',    icon: '🌈', label: 'Skin Arcobaleno', reward: () => { if (!ownedSkins.includes('rainbow')) ownedSkins.push('rainbow'); return '🌈 Skin Arcobaleno!'; } },
+            { trophies: 12500, id: 'r_12500',  icon: '🟣', label: 'Rallenta x5',     reward: () => { inventorySlows += 5; return '🟣 Rallenta x5!'; } },
+            { trophies: 15000, id: 'r_15k',    icon: '🪙', label: '+1.000 monete',   reward: () => { coins += 1000; return '🪙 +1.000 monete!'; } },
+            { trophies: 20000, id: 'r_20k',    icon: '👑', label: 'Skin Oro',        reward: () => { if (!ownedSkins.includes('goldskin')) ownedSkins.push('goldskin'); return '👑 Skin Oro Puro!'; } },
+            { trophies: 25000, id: 'r_25k',    icon: '🪙', label: '+2.500 monete',   reward: () => { coins += 2500; return '🪙 +2.500 monete!'; } },
+            { trophies: 30000, id: 'r_30k',    icon: '🛡️', label: 'Scudo x10',       reward: () => { inventoryShields += 10; return '🛡️ Scudo x10!'; } },
+            { trophies: 40000, id: 'r_40k',    icon: '🪙', label: '+4.000 monete',   reward: () => { coins += 4000; return '🪙 +4.000 monete!'; } },
+            { trophies: 50000, id: 'r_50k',    icon: '💎', label: 'Mega Pacchetto',  reward: () => { inventoryShields += 10; inventorySlows += 10; coins += 5000; return '💎 Mega Pacchetto!'; } },
+            { trophies: 65000, id: 'r_65k',    icon: '🪙', label: '+6.500 monete',   reward: () => { coins += 6500; return '🪙 +6.500 monete!'; } },
+            { trophies: 75000, id: 'r_75k',    icon: '🛡️', label: 'Scudo x15',       reward: () => { inventoryShields += 15; inventorySlows += 5; return '🛡️ Scudo x15!'; } },
+            { trophies: 85000, id: 'r_85k',    icon: '🪙', label: '+8.500 monete',   reward: () => { coins += 8500; return '🪙 +8.500 monete!'; } },
+            { trophies: 100000,id: 'r_100k',   icon: '🏆', label: 'LEGENDA 100K',    reward: () => { inventoryShields += 20; inventorySlows += 20; coins += 10000; if (!ownedSkins.includes('goldskin')) ownedSkins.push('goldskin'); if (!ownedSkins.includes('rainbow')) ownedSkins.push('rainbow'); return '🏆 LEGGENDA 100K — premio supremo!'; } }
         ];
 
         function checkTrophyMilestones() {
@@ -379,11 +625,12 @@
         }
 
         function addTrophies(amount) {
-            totalTrophies += amount;
+            totalTrophies = Math.min(100000, totalTrophies + amount);
             document.getElementById('trophies').innerText = totalTrophies;
             saveData();
             const rewards = checkTrophyMilestones();
             if (rewards) showRewardNotification(rewards);
+            updateProfileBadge();
         }
 
         function showRewardNotification(text) {
@@ -398,7 +645,7 @@
             document.getElementById('menu-title').innerHTML = highScore > 0 ? `CUBI PAZZI<br><span style="font-size:1.2rem; color:var(--neon-blue);">RECORD: ${highScore}</span>` : `CUBI PAZZI`;
         }
         updateMenuHighScoreDisplay();
-        renderDashboard();
+        updateProfileBadge();
         document.getElementById('coins').innerText = coins;
         document.getElementById('trophies').innerText = totalTrophies;
 
@@ -439,6 +686,19 @@
             localStorage.setItem('cp_trophies', totalTrophies);
             localStorage.setItem('cp_unlocked_rewards', JSON.stringify(unlockedRewards));
         }
+
+        function migrateOldRewards() {
+            const oldToNew = { shield_15: 'r_15', slow_30: 'r_30', coins_50: 'r_50', emerald_100: 'r_100' };
+            let changed = false;
+            for (const [oldId, newId] of Object.entries(oldToNew)) {
+                if (unlockedRewards[oldId] && !unlockedRewards[newId]) {
+                    unlockedRewards[newId] = true;
+                    changed = true;
+                }
+            }
+            if (changed) saveData();
+        }
+        migrateOldRewards();
 
         function updateMissionProgress() {
             missionDatabase.forEach(m => {
@@ -502,19 +762,19 @@
         window.addEventListener('touchend', () => { isDragging = false; });
 
         function showControlSelection() { mainMenu.style.display = 'none'; controlMenu.style.display = 'flex'; }
-        function backToMenu() { controlMenu.style.display = 'none'; mainMenu.style.display = 'flex'; }
+        function backToMenu() { controlMenu.style.display = 'none'; mainMenu.style.display = 'flex'; updateProfileBadge(); }
         
         function openShop() {
             mainMenu.style.display = 'none'; shopMenu.style.display = 'flex';
             document.getElementById('gacha-text').innerText = "?? PRONTO ??";
             renderShopSkins(); updateShopUI();
         }
-        function closeShop() { shopMenu.style.display = 'none'; mainMenu.style.display = 'flex'; }
+        function closeShop() { shopMenu.style.display = 'none'; mainMenu.style.display = 'flex'; updateProfileBadge(); }
 
         function openMissions() {
             checkDailyReset(); mainMenu.style.display = 'none'; msnMenu.style.display = 'flex'; renderMissions();
         }
-        function closeMissions() { msnMenu.style.display = 'none'; mainMenu.style.display = 'flex'; }
+        function closeMissions() { msnMenu.style.display = 'none'; mainMenu.style.display = 'flex'; updateProfileBadge(); }
 
         function renderMissions() {
             document.getElementById('missions-coins').innerText = coins;
@@ -584,7 +844,7 @@
                 if(!ownedSkins.includes('goldskin')) { rewardText = "👑 SKIN ORO PURO!"; ownedSkins.push('goldskin'); } 
                 else { rewardText = "🟣 CONVERTITO IN RALLENTA X3"; inventorySlows += 3; }
             }
-            displayElement.innerText = rewardText; saveData(); updateShopUI(); renderShopSkins(); renderDashboard();
+            displayElement.innerText = rewardText; saveData(); updateShopUI(); renderShopSkins();
         }
 
         function renderShopSkins() {
@@ -603,7 +863,7 @@
             });
         }
 
-        function buySkin(id, cost) { if (coins >= cost && !ownedSkins.includes(id)) { coins -= cost; ownedSkins.push(id); currentSkinId = id; saveData(); renderShopSkins(); updateShopUI(); renderDashboard(); } }
+        function buySkin(id, cost) { if (coins >= cost && !ownedSkins.includes(id)) { coins -= cost; ownedSkins.push(id); currentSkinId = id; saveData(); renderShopSkins(); updateShopUI(); } }
         function equipSkin(id) { if (ownedSkins.includes(id)) { currentSkinId = id; saveData(); renderShopSkins(); updateShopUI(); } }
 
         function updateShopUI() {
@@ -678,7 +938,7 @@
             gameoverMenu.style.display = 'flex';
         }
 
-        function backToMenuFromGameOver() { gameoverMenu.style.display = 'none'; updateMenuHighScoreDisplay(); renderDashboard(); mainMenu.style.display = 'flex'; }
+        function backToMenuFromGameOver() { gameoverMenu.style.display = 'none'; updateMenuHighScoreDisplay(); updateProfileBadge(); mainMenu.style.display = 'flex'; }
 
         let rainbowHue = 0;
         function animate() {
