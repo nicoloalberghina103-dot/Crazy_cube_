@@ -11,6 +11,10 @@
   gtag('config', 'G-LYFND4LEMM');
 </script>
     <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#080b11">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Cubi Pazzi</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
@@ -263,6 +267,90 @@
         .tr-item.legend .tr-cup { border-color: #a855f7; color: #d8b4fe; }
 
         #trophy-road-menu .btn-back { margin: 0 20px; width: calc(100% - 40px); flex-shrink: 0; }
+
+        /* Schermata benvenuto / aggiungi a home */
+        #welcome-screen {
+            z-index: 50;
+            justify-content: center;
+            padding: 36px 28px;
+        }
+        .welcome-icon { font-size: 4rem; margin-bottom: 8px; filter: drop-shadow(0 0 20px rgba(0,240,255,0.4)); }
+        .welcome-title { font-size: 1.75rem; font-weight: 700; margin: 0 0 12px; background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .welcome-text { color: #9ca3af; font-size: 0.95rem; line-height: 1.55; max-width: 320px; margin: 0 auto 20px; }
+        .welcome-steps {
+            background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 18px;
+            padding: 18px 20px; text-align: left; max-width: 320px; width: 100%; margin-bottom: 24px;
+        }
+        .welcome-steps h3 { margin: 0 0 12px; font-size: 0.85rem; color: var(--neon-gold); text-transform: uppercase; letter-spacing: 1.5px; }
+        .welcome-steps ol { margin: 0; padding-left: 20px; color: #cbd5e1; font-size: 0.88rem; line-height: 1.7; }
+        .welcome-steps li { margin-bottom: 6px; }
+        .btn-continue { background: linear-gradient(135deg, var(--neon-green), #059669); box-shadow: 0 4px 20px rgba(16,185,129,0.35); width: 100%; max-width: 300px; }
+
+        /* Pulsante profilo — angolo sinistro menu principale */
+        .menu-profile-btn-left {
+            position: absolute; top: 18px; left: 18px; z-index: 35;
+            width: 58px; height: 58px; border-radius: 50%; border: none; cursor: pointer;
+            background: linear-gradient(145deg, #1e2840, #111622);
+            border: 2px solid rgba(0, 240, 255, 0.45);
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45), 0 0 12px rgba(0, 240, 255, 0.12);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+            transition: transform 0.15s ease;
+        }
+        .menu-profile-btn-left:active { transform: scale(0.92); }
+        .menu-profile-btn-left .profile-icon { font-size: 1.25rem; line-height: 1; }
+        .menu-profile-btn-left .profile-label { font-size: 0.58rem; font-weight: 700; color: #67e8f9; letter-spacing: 0.3px; }
+
+        /* Dropdown profilo */
+        #profile-dropdown {
+            position: absolute; top: 84px; left: 12px; right: 12px; z-index: 40;
+            background: linear-gradient(180deg, #121a2a 0%, #0d111a 100%);
+            border: 1px solid rgba(0, 240, 255, 0.35);
+            border-radius: 18px; box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 0 24px rgba(0,240,255,0.08);
+            padding: 16px; display: none; flex-direction: column; gap: 12px;
+            max-height: calc(100% - 100px); overflow: hidden;
+        }
+        #profile-dropdown.open { display: flex; }
+        .profile-dd-stats {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+        }
+        .profile-stat-card {
+            background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 12px;
+            padding: 10px 12px; text-align: left;
+        }
+        .profile-stat-card .stat-label { font-size: 0.68rem; color: #5c6b84; text-transform: uppercase; letter-spacing: 1px; }
+        .profile-stat-card .stat-value { font-size: 1.25rem; font-weight: 700; color: var(--neon-blue); margin-top: 2px; }
+        .profile-stat-card.skins-count .stat-value { color: #d8b4fe; }
+        .profile-dd-title { font-size: 0.78rem; color: #5c6b84; text-transform: uppercase; letter-spacing: 2px; text-align: left; margin: 0; }
+        .profile-skin-list {
+            flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;
+            max-height: 280px; padding-right: 2px;
+        }
+        .profile-skin-list::-webkit-scrollbar { width: 4px; }
+        .profile-skin-list::-webkit-scrollbar-thumb { background: rgba(0,240,255,0.3); border-radius: 4px; }
+        .profile-skin-item {
+            background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 12px;
+            padding: 10px 12px; display: flex; align-items: center; gap: 12px; cursor: pointer;
+            transition: border-color 0.15s, background 0.15s; text-align: left;
+        }
+        .profile-skin-item:active { transform: scale(0.98); }
+        .profile-skin-item.selected { border-color: #00f0ff; background: #151c2c; box-shadow: 0 0 12px rgba(0,240,255,0.15); }
+        .profile-skin-item .skin-preview { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; }
+        .profile-skin-item .skin-info { flex: 1; min-width: 0; }
+        .profile-skin-item .skin-name { font-size: 0.88rem; font-weight: 700; color: #fff; }
+        .profile-skin-item .skin-tag { font-size: 0.65rem; color: #5c6b84; margin-top: 1px; }
+        .profile-skin-item .skin-check { font-size: 0.75rem; font-weight: 700; color: #00f0ff; flex-shrink: 0; }
+        .profile-skin-empty { color: #5c6b84; font-size: 0.85rem; padding: 20px; text-align: center; }
+        .profile-dd-close {
+            background: #1f293d; color: #9ca3af; border: 1px solid #374151; border-radius: 12px;
+            padding: 10px; font-size: 0.85rem; font-weight: 700; cursor: pointer; width: 100%;
+        }
+        .profile-dd-delete {
+            background: rgba(239, 68, 68, 0.12); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.45);
+            border-radius: 12px; padding: 10px; font-size: 0.85rem; font-weight: 700; cursor: pointer; width: 100%;
+            transition: background 0.15s;
+        }
+        .profile-dd-delete:active { background: rgba(239, 68, 68, 0.25); }
+        .profile-dd-warning { font-size: 0.68rem; color: #6b7280; text-align: center; line-height: 1.35; margin: -4px 0 0; }
     </style>
 </head>
 <body>
@@ -287,11 +375,49 @@
             </div>
         </div>
         
-        <div id="main-menu" class="screen">
-            <button type="button" class="menu-profile-btn" onclick="openTrophyRoad()" title="Profilo e percorso trofei">
+        <div id="welcome-screen" class="screen">
+            <div class="menu-main" style="gap: 18px;">
+                <div class="welcome-icon">📲</div>
+                <h2 class="welcome-title">Aggiungi alla Home</h2>
+                <p class="welcome-text">Per un'esperienza migliore — accesso rapido, schermo intero e gioco più fluido — aggiungi Cubi Pazzi alla schermata Home del tuo dispositivo.</p>
+                <div class="welcome-steps" id="welcome-steps-box">
+                    <h3>Come fare</h3>
+                    <ol id="welcome-steps-list">
+                        <li>Tocca il pulsante <strong>Condividi</strong> (Safari) o i <strong>tre puntini</strong> (Chrome)</li>
+                        <li>Seleziona <strong>Aggiungi a Home</strong> o <strong>Installa app</strong></li>
+                        <li>Conferma con <strong>Aggiungi</strong></li>
+                    </ol>
+                </div>
+                <button class="btn btn-continue" onclick="continueFromWelcome()">CONTINUA</button>
+            </div>
+        </div>
+
+        <div id="main-menu" class="screen" style="display: none;">
+            <button type="button" class="menu-profile-btn-left" onclick="toggleProfileDropdown()" title="Profilo">
+                <span class="profile-icon">👤</span>
+                <span class="profile-label">PROFILO</span>
+            </button>
+            <button type="button" class="menu-profile-btn" onclick="openTrophyRoad()" title="Percorso trofei">
                 <span class="profile-icon">🏆</span>
                 <span class="profile-trophies" id="profile-trophy-badge">0</span>
             </button>
+            <div id="profile-dropdown">
+                <div class="profile-dd-stats">
+                    <div class="profile-stat-card">
+                        <div class="stat-label">Record punti</div>
+                        <div class="stat-value" id="profile-highscore">0</div>
+                    </div>
+                    <div class="profile-stat-card skins-count">
+                        <div class="stat-label">Skin possedute</div>
+                        <div class="stat-value" id="profile-skin-count">0</div>
+                    </div>
+                </div>
+                <p class="profile-dd-title">Le tue skin — seleziona per equipaggiare</p>
+                <div class="profile-skin-list" id="profile-skin-list"></div>
+                <button type="button" class="profile-dd-delete" onclick="deleteAccount()">🗑️ ELIMINA ACCOUNT</button>
+                <p class="profile-dd-warning">Cancella progressi, monete, skin, trofei e missioni. Azione irreversibile.</p>
+                <button type="button" class="profile-dd-close" onclick="closeProfileDropdown()">CHIUDI</button>
+            </div>
             <div class="menu-main">
                 <div class="logo-box"><h1 id="menu-title">CUBI PAZZI</h1></div>
                 <div class="menu-actions">
@@ -322,7 +448,7 @@
                 <div class="section-label">Tentazione</div>
                 <div class="gacha-card">
                     <div class="gacha-title">🎰 LUCKY SPIN</div>
-                    <div class="gacha-subtitle">Trova utility o skin leggendarie introvabili!</div>
+                    <div class="gacha-subtitle">Utility e monete — skin esclusive molto rare!</div>
                     <div class="gacha-display" id="gacha-text">?? PRONTO ??</div>
                     <button class="btn-gacha" id="spin-btn" onclick="playLuckySpin()">GIRA LA RUOTA (40 🪙)</button>
                 </div>
@@ -343,7 +469,7 @@
                         <button class="buy-action-btn" id="buy-slow-btn" onclick="buySlowTime()">COMPRA</button>
                     </div>
                 </div>
-                <div class="section-label">Skin Nucleo</div><div class="list-wrapper" id="skin-list-container"></div>
+                <div class="section-label">Skin Negozio (colori neon)</div><div class="list-wrapper" id="skin-list-container"></div>
             </div>
             <button class="btn btn-back" onclick="closeShop()">CHIUDI HANGAR</button>
         </div>
@@ -422,16 +548,41 @@
         let currentSkinId = localStorage.getItem('cp_currentSkin') || 'white';
         let ownedSkins = JSON.parse(localStorage.getItem('cp_ownedSkins')) || ['white'];
 
-        const skinDatabase = [
-            { id: 'white', name: 'Standard Alpha', cost: 0, color: '#ffffff' },
-            { id: 'emerald', name: 'Plasma Smeraldo', cost: 15, color: '#10b981' },
-            { id: 'ruby', name: 'Rubino Laser', cost: 25, color: '#f43f5e' },
-            { id: 'amber', name: 'Neon Ambra', cost: 40, color: '#f59e0b' },
-            { id: 'electric', name: 'Fulmine Blu', cost: 55, color: '#00f0ff' },
-            { id: 'void', name: 'Vuoto Viola', cost: 75, color: '#8b5cf6' },
-            { id: 'rainbow', name: '🌈 Arcobaleno Chroma', cost: 999, color: 'rainbow' },
-            { id: 'goldskin', name: '👑 Oro Puro', cost: 999, color: '#ffd700' }
+        const shopSkinDatabase = [
+            { id: 'white', name: 'Standard Alpha', cost: 0, color: '#ffffff', source: 'default' },
+            { id: 'emerald', name: 'Plasma Smeraldo', cost: 15, color: '#10b981', source: 'shop' },
+            { id: 'ruby', name: 'Rubino Laser', cost: 25, color: '#f43f5e', source: 'shop' },
+            { id: 'amber', name: 'Neon Ambra', cost: 40, color: '#f59e0b', source: 'shop' },
+            { id: 'electric', name: 'Fulmine Blu', cost: 55, color: '#00f0ff', source: 'shop' },
+            { id: 'void', name: 'Vuoto Viola', cost: 75, color: '#8b5cf6', source: 'shop' },
+            { id: 'rainbow', name: '🌈 Arcobaleno Chroma', cost: 999, color: 'rainbow', source: 'gacha' },
+            { id: 'goldskin', name: '👑 Oro Puro', cost: 999, color: '#ffd700', source: 'gacha' }
         ];
+
+        const trophySkinDatabase = [
+            { id: 'pastel_mint', name: 'Menta Dolce', color: '#a8e6cf', source: 'trophy' },
+            { id: 'pastel_pink', name: 'Rosa Cipria', color: '#ffb7c5', source: 'trophy' },
+            { id: 'pastel_lavender', name: 'Lavanda Soft', color: '#c9b1ff', source: 'trophy' },
+            { id: 'pastel_sky', name: 'Cielo Pastello', color: '#a8d8ff', source: 'trophy' },
+            { id: 'pastel_peach', name: 'Pesca Tender', color: '#ffd4b8', source: 'trophy' },
+            { id: 'pastel_coral', name: 'Corallo Tenue', color: '#ffb3a7', source: 'trophy' },
+            { id: 'pastel_lilac', name: 'Lilla Sogno', color: '#d4b8e8', source: 'trophy' },
+            { id: 'pastel_cream', name: '✨ Crema Leggendaria', color: '#fff5d6', source: 'trophy' }
+        ];
+
+        function getAllSkins() { return [...shopSkinDatabase, ...trophySkinDatabase]; }
+        function getSkinById(id) { return getAllSkins().find(s => s.id === id); }
+        function getSkinColorStyle(skin) {
+            if (!skin) return '#ffffff';
+            if (skin.color === 'rainbow') return 'linear-gradient(to right, red,orange,yellow,green,blue,violet)';
+            return skin.color;
+        }
+        function getSkinSourceLabel(source) {
+            if (source === 'trophy') return '🏆 Percorso trofei';
+            if (source === 'gacha') return '🎰 Lucky Spin';
+            if (source === 'shop') return '🛒 Negozio';
+            return 'Gratis';
+        }
 
         let msnStats = JSON.parse(localStorage.getItem('cp_msn_stats')) || { totCoins: 0, totCubes: 0, lastDailyReset: "" };
         let msnStates = JSON.parse(localStorage.getItem('cp_msn_states')) || { c1: 0, c2: 0, s1: 0, s2: 0, d1: 0, d2: 0 };
@@ -452,6 +603,109 @@
         const MAGNET_MAX_DURATION = 600; let magnetTimer = 0; 
         let touchStartPos = { x: 0, y: 0 }; let playerStartPos = { x: 0, y: 0 }; let isDragging = false;
         let mousePos = { x: 240, y: 500 }; let isMouseMoving = false;
+
+        // BENVENUTO / HOME SCREEN
+        function continueFromWelcome() {
+            localStorage.setItem('cp_welcome_seen', '1');
+            document.getElementById('welcome-screen').style.display = 'none';
+            mainMenu.style.display = 'flex';
+            updateMenuHighScoreDisplay();
+            updateProfileBadge();
+        }
+
+        function initWelcomeScreen() {
+            const seen = localStorage.getItem('cp_welcome_seen');
+            if (seen) {
+                document.getElementById('welcome-screen').style.display = 'none';
+                mainMenu.style.display = 'flex';
+            } else {
+                document.getElementById('welcome-screen').style.display = 'flex';
+                mainMenu.style.display = 'none';
+            }
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+            const isAndroid = /Android/.test(navigator.userAgent);
+            const list = document.getElementById('welcome-steps-list');
+            if (isIOS) {
+                list.innerHTML = '<li>Tocca <strong>Condividi</strong> <span style="font-size:1.1em">⎙</span> in basso (Safari)</li><li>Scorri e seleziona <strong>Aggiungi a Home</strong></li><li>Tocca <strong>Aggiungi</strong> in alto a destra</li>';
+            } else if (isAndroid) {
+                list.innerHTML = '<li>Tocca i <strong>tre puntini</strong> ⋮ in alto (Chrome)</li><li>Seleziona <strong>Aggiungi a schermata Home</strong> o <strong>Installa app</strong></li><li>Conferma con <strong>Aggiungi</strong></li>';
+            }
+        }
+
+        // PROFILO — menu a tendina
+        function toggleProfileDropdown() {
+            const dd = document.getElementById('profile-dropdown');
+            const isOpen = dd.classList.contains('open');
+            if (isOpen) closeProfileDropdown();
+            else { renderProfileDropdown(); dd.classList.add('open'); }
+        }
+
+        function closeProfileDropdown() {
+            document.getElementById('profile-dropdown').classList.remove('open');
+        }
+
+        function renderProfileDropdown() {
+            document.getElementById('profile-highscore').innerText = highScore.toLocaleString('it-IT');
+            document.getElementById('profile-skin-count').innerText = ownedSkins.length;
+            const list = document.getElementById('profile-skin-list');
+            list.innerHTML = '';
+            if (ownedSkins.length === 0) {
+                list.innerHTML = '<div class="profile-skin-empty">Nessuna skin ancora — gioca e sblocca premi!</div>';
+                return;
+            }
+            ownedSkins.forEach(skinId => {
+                const skin = getSkinById(skinId);
+                if (!skin) return;
+                const isSelected = currentSkinId === skinId;
+                const item = document.createElement('div');
+                item.className = 'profile-skin-item' + (isSelected ? ' selected' : '');
+                item.onclick = () => selectSkinFromProfile(skinId);
+                item.innerHTML = `
+                    <div class="skin-preview" style="background:${getSkinColorStyle(skin)}; box-shadow: 0 0 8px ${skin.color === 'rainbow' ? '#a855f7' : skin.color};"></div>
+                    <div class="skin-info">
+                        <div class="skin-name">${skin.name}</div>
+                        <div class="skin-tag">${getSkinSourceLabel(skin.source)}</div>
+                    </div>
+                    ${isSelected ? '<span class="skin-check">✓ IN USO</span>' : ''}
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function selectSkinFromProfile(id) {
+            if (!ownedSkins.includes(id)) return;
+            currentSkinId = id;
+            saveData();
+            renderProfileDropdown();
+        }
+
+        function deleteAccount() {
+            if (gameActive) {
+                alert('Termina la partita in corso prima di eliminare l\'account.');
+                return;
+            }
+            const ok = confirm(
+                'Eliminare l\'account?\n\n' +
+                'Verranno cancellati PER SEMPRE:\n' +
+                '• Record e progressi\n' +
+                '• Monete, trofei e missioni\n' +
+                '• Tutte le skin e l\'inventario\n\n' +
+                'Questa azione non può essere annullata.'
+            );
+            if (!ok) return;
+            const sure = confirm('Sei sicuro? Tutti i dati verranno azzerati.');
+            if (!sure) return;
+
+            const keysToRemove = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith('cp_')) keysToRemove.push(key);
+            }
+            keysToRemove.forEach(key => localStorage.removeItem(key));
+
+            closeProfileDropdown();
+            location.reload();
+        }
 
         // DASHBOARD / PROFILO
         function updateProfileBadge() {
@@ -479,6 +733,7 @@
         }
 
         function openTrophyRoad() {
+            closeProfileDropdown();
             mainMenu.style.display = 'none';
             trophyRoadMenu.style.display = 'flex';
             renderTrophyRoad();
@@ -591,22 +846,22 @@
             { trophies: 15,    id: 'r_15',     icon: '🛡️', label: 'Scudo x1',        reward: () => { inventoryShields++; return '🛡️ Scudo sbloccato!'; } },
             { trophies: 30,    id: 'r_30',     icon: '🟣', label: 'Rallenta x1',     reward: () => { inventorySlows++; return '🟣 Rallenta sbloccato!'; } },
             { trophies: 50,    id: 'r_50',     icon: '🪙', label: '+50 monete',      reward: () => { coins += 50; return '🪙 +50 monete!'; } },
-            { trophies: 100,   id: 'r_100',    icon: '💚', label: 'Skin Smeraldo',   reward: () => { if (!ownedSkins.includes('emerald')) ownedSkins.push('emerald'); return '💚 Skin Smeraldo!'; } },
+            { trophies: 100,   id: 'r_100',    icon: '🌿', label: 'Skin Menta Dolce',   reward: () => { if (!ownedSkins.includes('pastel_mint')) ownedSkins.push('pastel_mint'); return '🌿 Skin Menta Dolce!'; } },
             { trophies: 200,   id: 'r_200',    icon: '🪙', label: '+100 monete',     reward: () => { coins += 100; return '🪙 +100 monete!'; } },
-            { trophies: 350,   id: 'r_350',    icon: '❤️', label: 'Skin Rubino',     reward: () => { if (!ownedSkins.includes('ruby')) ownedSkins.push('ruby'); return '❤️ Skin Rubino!'; } },
+            { trophies: 350,   id: 'r_350',    icon: '🌸', label: 'Skin Rosa Cipria',   reward: () => { if (!ownedSkins.includes('pastel_pink')) ownedSkins.push('pastel_pink'); return '🌸 Skin Rosa Cipria!'; } },
             { trophies: 500,   id: 'r_500',    icon: '🛡️', label: 'Scudo x2',        reward: () => { inventoryShields += 2; return '🛡️ Scudo x2!'; } },
             { trophies: 750,   id: 'r_750',    icon: '🪙', label: '+150 monete',     reward: () => { coins += 150; return '🪙 +150 monete!'; } },
-            { trophies: 1000,  id: 'r_1k',     icon: '🟠', label: 'Skin Ambra',      reward: () => { if (!ownedSkins.includes('amber')) ownedSkins.push('amber'); return '🟠 Skin Ambra!'; } },
+            { trophies: 1000,  id: 'r_1k',     icon: '💜', label: 'Skin Lavanda',    reward: () => { if (!ownedSkins.includes('pastel_lavender')) ownedSkins.push('pastel_lavender'); return '💜 Skin Lavanda Soft!'; } },
             { trophies: 1500,  id: 'r_1500',   icon: '🟣', label: 'Rallenta x3',     reward: () => { inventorySlows += 3; return '🟣 Rallenta x3!'; } },
-            { trophies: 2000,  id: 'r_2k',     icon: '⚡', label: 'Skin Fulmine',    reward: () => { if (!ownedSkins.includes('electric')) ownedSkins.push('electric'); return '⚡ Skin Fulmine!'; } },
+            { trophies: 2000,  id: 'r_2k',     icon: '🩵', label: 'Skin Cielo',      reward: () => { if (!ownedSkins.includes('pastel_sky')) ownedSkins.push('pastel_sky'); return '🩵 Skin Cielo Pastello!'; } },
             { trophies: 3000,  id: 'r_3k',     icon: '🪙', label: '+300 monete',     reward: () => { coins += 300; return '🪙 +300 monete!'; } },
-            { trophies: 4500,  id: 'r_4500',   icon: '🔮', label: 'Skin Vuoto',      reward: () => { if (!ownedSkins.includes('void')) ownedSkins.push('void'); return '🔮 Skin Vuoto!'; } },
+            { trophies: 4500,  id: 'r_4500',   icon: '🍑', label: 'Skin Pesca',      reward: () => { if (!ownedSkins.includes('pastel_peach')) ownedSkins.push('pastel_peach'); return '🍑 Skin Pesca Tender!'; } },
             { trophies: 6000,  id: 'r_6k',     icon: '🛡️', label: 'Scudo x5',        reward: () => { inventorySlows += 2; inventoryShields += 5; return '🛡️ Scudo x5!'; } },
             { trophies: 8000,  id: 'r_8k',     icon: '🪙', label: '+800 monete',     reward: () => { coins += 800; return '🪙 +800 monete!'; } },
-            { trophies: 10000, id: 'r_10k',    icon: '🌈', label: 'Skin Arcobaleno', reward: () => { if (!ownedSkins.includes('rainbow')) ownedSkins.push('rainbow'); return '🌈 Skin Arcobaleno!'; } },
+            { trophies: 10000, id: 'r_10k',    icon: '🪸', label: 'Skin Corallo',    reward: () => { if (!ownedSkins.includes('pastel_coral')) ownedSkins.push('pastel_coral'); return '🪸 Skin Corallo Tenue!'; } },
             { trophies: 12500, id: 'r_12500',  icon: '🟣', label: 'Rallenta x5',     reward: () => { inventorySlows += 5; return '🟣 Rallenta x5!'; } },
             { trophies: 15000, id: 'r_15k',    icon: '🪙', label: '+1.000 monete',   reward: () => { coins += 1000; return '🪙 +1.000 monete!'; } },
-            { trophies: 20000, id: 'r_20k',    icon: '👑', label: 'Skin Oro',        reward: () => { if (!ownedSkins.includes('goldskin')) ownedSkins.push('goldskin'); return '👑 Skin Oro Puro!'; } },
+            { trophies: 20000, id: 'r_20k',    icon: '🔮', label: 'Skin Lilla',      reward: () => { if (!ownedSkins.includes('pastel_lilac')) ownedSkins.push('pastel_lilac'); return '🔮 Skin Lilla Sogno!'; } },
             { trophies: 25000, id: 'r_25k',    icon: '🪙', label: '+2.500 monete',   reward: () => { coins += 2500; return '🪙 +2.500 monete!'; } },
             { trophies: 30000, id: 'r_30k',    icon: '🛡️', label: 'Scudo x10',       reward: () => { inventoryShields += 10; return '🛡️ Scudo x10!'; } },
             { trophies: 40000, id: 'r_40k',    icon: '🪙', label: '+4.000 monete',   reward: () => { coins += 4000; return '🪙 +4.000 monete!'; } },
@@ -614,7 +869,7 @@
             { trophies: 65000, id: 'r_65k',    icon: '🪙', label: '+6.500 monete',   reward: () => { coins += 6500; return '🪙 +6.500 monete!'; } },
             { trophies: 75000, id: 'r_75k',    icon: '🛡️', label: 'Scudo x15',       reward: () => { inventoryShields += 15; inventorySlows += 5; return '🛡️ Scudo x15!'; } },
             { trophies: 85000, id: 'r_85k',    icon: '🪙', label: '+8.500 monete',   reward: () => { coins += 8500; return '🪙 +8.500 monete!'; } },
-            { trophies: 100000,id: 'r_100k',   icon: '🏆', label: 'LEGENDA 100K',    reward: () => { inventoryShields += 20; inventorySlows += 20; coins += 10000; if (!ownedSkins.includes('goldskin')) ownedSkins.push('goldskin'); if (!ownedSkins.includes('rainbow')) ownedSkins.push('rainbow'); return '🏆 LEGGENDA 100K — premio supremo!'; } }
+            { trophies: 100000,id: 'r_100k',   icon: '✨', label: 'LEGENDA 100K',    reward: () => { inventoryShields += 20; inventorySlows += 20; coins += 10000; if (!ownedSkins.includes('pastel_cream')) ownedSkins.push('pastel_cream'); return '✨ LEGGENDA 100K — Crema Leggendaria!'; } }
         ];
 
         function checkTrophyMilestones() {
@@ -655,6 +910,7 @@
         }
         updateMenuHighScoreDisplay();
         updateProfileBadge();
+        initWelcomeScreen();
         document.getElementById('coins').innerText = coins;
         document.getElementById('trophies').innerText = totalTrophies;
 
@@ -708,6 +964,23 @@
             if (changed) saveData();
         }
         migrateOldRewards();
+
+        function migrateTrophySkins() {
+            const skinMigration = {
+                r_100: 'pastel_mint', r_350: 'pastel_pink', r_1k: 'pastel_lavender',
+                r_2k: 'pastel_sky', r_4500: 'pastel_peach', r_10k: 'pastel_coral',
+                r_20k: 'pastel_lilac', r_100k: 'pastel_cream'
+            };
+            let changed = false;
+            for (const [rewardId, skinId] of Object.entries(skinMigration)) {
+                if (unlockedRewards[rewardId] && !ownedSkins.includes(skinId)) {
+                    ownedSkins.push(skinId);
+                    changed = true;
+                }
+            }
+            if (changed) saveData();
+        }
+        migrateTrophySkins();
 
         function updateMissionProgress() {
             missionDatabase.forEach(m => {
@@ -770,10 +1043,11 @@
         });
         window.addEventListener('touchend', () => { isDragging = false; });
 
-        function showControlSelection() { mainMenu.style.display = 'none'; controlMenu.style.display = 'flex'; }
-        function backToMenu() { controlMenu.style.display = 'none'; mainMenu.style.display = 'flex'; updateProfileBadge(); }
+        function showControlSelection() { closeProfileDropdown(); mainMenu.style.display = 'none'; controlMenu.style.display = 'flex'; }
+        function backToMenu() { controlMenu.style.display = 'none'; mainMenu.style.display = 'flex'; updateProfileBadge(); closeProfileDropdown(); }
         
         function openShop() {
+            closeProfileDropdown();
             mainMenu.style.display = 'none'; shopMenu.style.display = 'flex';
             document.getElementById('gacha-text').innerText = "?? PRONTO ??";
             renderShopSkins(); updateShopUI();
@@ -781,7 +1055,7 @@
         function closeShop() { shopMenu.style.display = 'none'; mainMenu.style.display = 'flex'; updateProfileBadge(); }
 
         function openMissions() {
-            checkDailyReset(); mainMenu.style.display = 'none'; msnMenu.style.display = 'flex'; renderMissions();
+            closeProfileDropdown(); checkDailyReset(); mainMenu.style.display = 'none'; msnMenu.style.display = 'flex'; renderMissions();
         }
         function closeMissions() { msnMenu.style.display = 'none'; mainMenu.style.display = 'flex'; updateProfileBadge(); }
 
@@ -832,7 +1106,7 @@
             if (coins < 40) return;
             coins -= 40; msnDailyCounters.spinsToday++; updateMissionProgress(); saveData(); updateShopUI();
             const display = document.getElementById('gacha-text');
-            const spinItems = ["🛡️ SCUDO X1", "🟣 RALLENTA X1", "🪙 15 MONETE", "🪙 60 MONETE", "🛡️ PACCHETTO X2", "👑 SKIN ORO", "🌈 SKIN CHROMA"];
+            const spinItems = ["🛡️ SCUDO X1", "🟣 RALLENTA X1", "🪙 15 MONETE", "🪙 60 MONETE", "🛡️ PACCHETTO X2", "🪙 40 MONETE", "💰 JACKPOT"];
             let counter = 0;
             let interval = setInterval(() => {
                 display.innerText = spinItems[Math.floor(Math.random() * spinItems.length)]; counter++;
@@ -842,11 +1116,12 @@
 
         function determineGachaReward(displayElement) {
             let rand = Math.random(); let rewardText = "";
-            if (rand < 0.30) { rewardText = "🛡️ RICEVUTO SCUDO!"; inventoryShields++; } 
-            else if (rand < 0.60) { rewardText = "🟣 RICEVUTO RALLENTA!"; inventorySlows++; } 
-            else if (rand < 0.75) { rewardText = "🪙 BONUS: +20 MONETE!"; coins += 20; } 
-            else if (rand < 0.85) { rewardText = "💰 JACKPOT: +70 MONETE!"; coins += 70; } 
-            else if (rand < 0.93) {
+            if (rand < 0.32) { rewardText = "🛡️ RICEVUTO SCUDO!"; inventoryShields++; } 
+            else if (rand < 0.62) { rewardText = "🟣 RICEVUTO RALLENTA!"; inventorySlows++; } 
+            else if (rand < 0.78) { rewardText = "🪙 BONUS: +20 MONETE!"; coins += 20; } 
+            else if (rand < 0.90) { rewardText = "💰 JACKPOT: +70 MONETE!"; coins += 70; } 
+            else if (rand < 0.96) { rewardText = "🛡️ PACCHETTO SCUDI X2!"; inventoryShields += 2; }
+            else if (rand < 0.985) {
                 if(!ownedSkins.includes('rainbow')) { rewardText = "🌈 SKIN ARCOBALENO!"; ownedSkins.push('rainbow'); } 
                 else { rewardText = "🛡️ CONVERTITO IN SCUDI X3"; inventoryShields += 3; }
             } else {
@@ -858,22 +1133,19 @@
 
         function renderShopSkins() {
             const container = document.getElementById('skin-list-container'); container.innerHTML = '';
-            skinDatabase.forEach(skin => {
-                const isOwned = ownedSkins.includes(skin.id); const isSelected = currentSkinId === skin.id;
-                const card = document.createElement('div'); card.className = `item-card ${isSelected ? 'selected' : ''}`;
-                let priceLabel = isOwned ? 'Sbloccata' : 'Costo: ' + skin.cost + ' 🪙';
-                if(skin.cost === 999) priceLabel = "🏆 SOLO CON LUCKY SPIN";
-                let btnHtml = isSelected ? `<button class="buy-action-btn use-btn" disabled>IN USO</button>` :
-                              isOwned ? `<button class="buy-action-btn use-btn" onclick="equipSkin('${skin.id}')">USA</button>` :
-                              `<button class="buy-action-btn" ${(coins < skin.cost || skin.cost === 999) ? 'disabled' : ''} onclick="buySkin('${skin.id}', ${skin.cost})">SBLOCCA</button>`;
-                let colorStyle = skin.color === 'rainbow' ? 'linear-gradient(to right, red,orange,yellow,green,blue,violet)' : skin.color;
-                card.innerHTML = `<div class="item-core"><div class="preview-circle" style="background:${colorStyle};"></div><div class="item-details"><div class="item-name">${skin.name}</div><div class="item-price">${priceLabel}</div></div></div>${btnHtml}`;
+            shopSkinDatabase.filter(s => s.source === 'shop').forEach(skin => {
+                const isOwned = ownedSkins.includes(skin.id);
+                const card = document.createElement('div'); card.className = 'item-card';
+                let priceLabel = isOwned ? '✓ Acquistata — equipaggia dal Profilo' : 'Costo: ' + skin.cost + ' 🪙';
+                let btnHtml = isOwned
+                    ? `<button class="buy-action-btn" disabled>ACQUISTATA</button>`
+                    : `<button class="buy-action-btn" ${(coins < skin.cost) ? 'disabled' : ''} onclick="buySkin('${skin.id}', ${skin.cost})">SBLOCCA</button>`;
+                card.innerHTML = `<div class="item-core"><div class="preview-circle" style="background:${getSkinColorStyle(skin)};"></div><div class="item-details"><div class="item-name">${skin.name}</div><div class="item-price">${priceLabel}</div></div></div>${btnHtml}`;
                 container.appendChild(card);
             });
         }
 
-        function buySkin(id, cost) { if (coins >= cost && !ownedSkins.includes(id)) { coins -= cost; ownedSkins.push(id); currentSkinId = id; saveData(); renderShopSkins(); updateShopUI(); } }
-        function equipSkin(id) { if (ownedSkins.includes(id)) { currentSkinId = id; saveData(); renderShopSkins(); updateShopUI(); } }
+        function buySkin(id, cost) { if (coins >= cost && !ownedSkins.includes(id)) { coins -= cost; ownedSkins.push(id); saveData(); renderShopSkins(); updateShopUI(); } }
 
         function updateShopUI() {
             document.getElementById('shop-coins').innerText = coins + " 🪙";
@@ -947,7 +1219,14 @@
             gameoverMenu.style.display = 'flex';
         }
 
-        function backToMenuFromGameOver() { gameoverMenu.style.display = 'none'; updateMenuHighScoreDisplay(); updateProfileBadge(); mainMenu.style.display = 'flex'; }
+        function backToMenuFromGameOver() { gameoverMenu.style.display = 'none'; updateMenuHighScoreDisplay(); updateProfileBadge(); closeProfileDropdown(); mainMenu.style.display = 'flex'; }
+
+        document.addEventListener('click', (e) => {
+            const dd = document.getElementById('profile-dropdown');
+            if (!dd || !dd.classList.contains('open')) return;
+            if (e.target.closest('.menu-profile-btn-left') || e.target.closest('#profile-dropdown')) return;
+            closeProfileDropdown();
+        });
 
         let rainbowHue = 0;
         function animate() {
@@ -983,7 +1262,7 @@
             if (player.y < player.radius) player.y = player.radius;
             if (player.y > canvas.height - player.radius) player.y = canvas.height - player.radius;
 
-            const activeSkin = skinDatabase.find(s => s.id === currentSkinId);
+            const activeSkin = getSkinById(currentSkinId);
             let playerColor = '#ffffff';
             if(activeSkin) {
                 if(activeSkin.color === 'rainbow') { rainbowHue = (rainbowHue + 2) % 360; playerColor = `hsl(${rainbowHue}, 100%, 60%)`; } 
