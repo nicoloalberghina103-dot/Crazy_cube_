@@ -321,6 +321,12 @@
         .profile-stat-card .stat-value { font-size: 1.25rem; font-weight: 700; color: var(--neon-blue); margin-top: 2px; }
         .profile-stat-card.skins-count .stat-value { color: #d8b4fe; }
         .profile-dd-title { font-size: 0.78rem; color: #5c6b84; text-transform: uppercase; letter-spacing: 2px; text-align: left; margin: 0; }
+        .profile-name-section { padding: 12px; background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 12px; margin-bottom: 8px; }
+        .profile-name-label { font-size: 0.68rem; color: #5c6b84; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; display: block; }
+        .profile-name-input { width: 100%; padding: 8px 10px; background: #0d111a; border: 1px solid rgba(0,240,255,0.3); border-radius: 8px; color: #fff; font-size: 0.95rem; font-family: 'Space Grotesk', sans-serif; box-sizing: border-box; }
+        .profile-name-input:focus { outline: none; border-color: #00f0ff; box-shadow: 0 0 8px rgba(0,240,255,0.15); }
+        .profile-name-display { font-size: 1.1rem; font-weight: 700; color: #00f0ff; word-break: break-word; }
+        .profile-name-empty { color: #5c6b84; font-size: 0.85rem; font-style: italic; }
         .profile-skin-list {
             flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;
             max-height: 280px; padding-right: 2px;
@@ -351,6 +357,32 @@
         }
         .profile-dd-delete:active { background: rgba(239, 68, 68, 0.25); }
         .profile-dd-warning { font-size: 0.68rem; color: #6b7280; text-align: center; line-height: 1.35; margin: -4px 0 0; }
+        
+        /* Credits footer */
+        .credits-footer {
+            position: fixed;
+            bottom: 8px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            padding: 12px 16px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #fff;
+            background: transparent;
+            z-index: 100;
+            pointer-events: none;
+            letter-spacing: 1px;
+        }
+        .credits-footer a {
+            color: #00f0ff;
+            text-decoration: none;
+            transition: color 0.2s;
+            font-weight: 700;
+        }
+        .credits-footer a:hover {
+            color: #ffb700;
+        }
     </style>
 </head>
 <body>
@@ -402,6 +434,10 @@
                 <span class="profile-trophies" id="profile-trophy-badge">0</span>
             </button>
             <div id="profile-dropdown">
+                <div class="profile-name-section">
+                    <label class="profile-name-label">Il tuo nome</label>
+                    <input type="text" class="profile-name-input" id="profile-name-input" placeholder="Inserisci il tuo nome" maxlength="20">
+                </div>
                 <div class="profile-dd-stats">
                     <div class="profile-stat-card">
                         <div class="stat-label">Record punti</div>
@@ -513,6 +549,10 @@
         </div>
     </div>
 
+    <div class="credits-footer">
+        ✨ Creato da <span style="color: #00f0ff;">Nicolò Alberghina</span> ✨
+    </div>
+
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
@@ -547,6 +587,7 @@
 
         let currentSkinId = localStorage.getItem('cp_currentSkin') || 'white';
         let ownedSkins = JSON.parse(localStorage.getItem('cp_ownedSkins')) || ['white'];
+        let playerName = localStorage.getItem('cp_playerName') || '';
 
         const shopSkinDatabase = [
             { id: 'white', name: 'Standard Alpha', cost: 0, color: '#ffffff', source: 'default' },
@@ -647,6 +688,22 @@
         function renderProfileDropdown() {
             document.getElementById('profile-highscore').innerText = highScore.toLocaleString('it-IT');
             document.getElementById('profile-skin-count').innerText = ownedSkins.length;
+            
+            // Mostra il nome nel campo input
+            const nameInput = document.getElementById('profile-name-input');
+            if (nameInput) {
+                nameInput.value = playerName;
+                // Rimuovi listener precedente per evitare duplicati
+                const newInput = nameInput.cloneNode(true);
+                nameInput.parentNode.replaceChild(newInput, nameInput);
+                
+                // Aggiungi il nuovo listener
+                document.getElementById('profile-name-input').addEventListener('change', (e) => {
+                    playerName = e.target.value.trim();
+                    saveData();
+                });
+            }
+            
             const list = document.getElementById('profile-skin-list');
             list.innerHTML = '';
             if (ownedSkins.length === 0) {
@@ -736,12 +793,14 @@
             closeProfileDropdown();
             mainMenu.style.display = 'none';
             trophyRoadMenu.style.display = 'flex';
+            document.querySelector('.credits-footer').style.display = 'none';
             renderTrophyRoad();
         }
 
         function closeTrophyRoad() {
             trophyRoadMenu.style.display = 'none';
             mainMenu.style.display = 'flex';
+            document.querySelector('.credits-footer').style.display = 'block';
             updateProfileBadge();
         }
 
@@ -950,6 +1009,7 @@
             localStorage.setItem('cp_msn_daily', JSON.stringify(msnDailyCounters));
             localStorage.setItem('cp_trophies', totalTrophies);
             localStorage.setItem('cp_unlocked_rewards', JSON.stringify(unlockedRewards));
+            localStorage.setItem('cp_playerName', playerName);
         }
 
         function migrateOldRewards() {
@@ -1043,21 +1103,50 @@
         });
         window.addEventListener('touchend', () => { isDragging = false; });
 
-        function showControlSelection() { closeProfileDropdown(); mainMenu.style.display = 'none'; controlMenu.style.display = 'flex'; }
-        function backToMenu() { controlMenu.style.display = 'none'; mainMenu.style.display = 'flex'; updateProfileBadge(); closeProfileDropdown(); }
+        function showControlSelection() { 
+            closeProfileDropdown(); 
+            mainMenu.style.display = 'none'; 
+            controlMenu.style.display = 'flex'; 
+            document.querySelector('.credits-footer').style.display = 'none';
+        }
+        function backToMenu() { 
+            controlMenu.style.display = 'none'; 
+            mainMenu.style.display = 'flex'; 
+            document.querySelector('.credits-footer').style.display = 'block';
+            updateProfileBadge(); 
+            closeProfileDropdown(); 
+        }
         
         function openShop() {
             closeProfileDropdown();
-            mainMenu.style.display = 'none'; shopMenu.style.display = 'flex';
+            mainMenu.style.display = 'none'; 
+            shopMenu.style.display = 'flex';
+            document.querySelector('.credits-footer').style.display = 'none';
             document.getElementById('gacha-text').innerText = "?? PRONTO ??";
-            renderShopSkins(); updateShopUI();
+            renderShopSkins(); 
+            updateShopUI();
         }
-        function closeShop() { shopMenu.style.display = 'none'; mainMenu.style.display = 'flex'; updateProfileBadge(); }
+        function closeShop() { 
+            shopMenu.style.display = 'none'; 
+            mainMenu.style.display = 'flex'; 
+            document.querySelector('.credits-footer').style.display = 'block';
+            updateProfileBadge(); 
+        }
 
         function openMissions() {
-            closeProfileDropdown(); checkDailyReset(); mainMenu.style.display = 'none'; msnMenu.style.display = 'flex'; renderMissions();
+            closeProfileDropdown(); 
+            checkDailyReset(); 
+            mainMenu.style.display = 'none'; 
+            msnMenu.style.display = 'flex'; 
+            document.querySelector('.credits-footer').style.display = 'none';
+            renderMissions();
         }
-        function closeMissions() { msnMenu.style.display = 'none'; mainMenu.style.display = 'flex'; updateProfileBadge(); }
+        function closeMissions() { 
+            msnMenu.style.display = 'none'; 
+            mainMenu.style.display = 'flex'; 
+            document.querySelector('.credits-footer').style.display = 'block';
+            updateProfileBadge(); 
+        }
 
         function renderMissions() {
             document.getElementById('missions-coins').innerText = coins;
@@ -1175,6 +1264,7 @@
             magnetTimer = 0; activeShield = false; activeSlowTime = false; slowTimeTimer = 0;
 
             gameActive = true;
+            document.querySelector('.credits-footer').style.display = 'none';
             resizeCanvas();
             
             player.x = canvas.width / 2; player.y = canvas.height - 120;
@@ -1217,9 +1307,17 @@
             }
             
             gameoverMenu.style.display = 'flex';
+            document.querySelector('.credits-footer').style.display = 'none';
         }
 
-        function backToMenuFromGameOver() { gameoverMenu.style.display = 'none'; updateMenuHighScoreDisplay(); updateProfileBadge(); closeProfileDropdown(); mainMenu.style.display = 'flex'; }
+        function backToMenuFromGameOver() { 
+            gameoverMenu.style.display = 'none'; 
+            updateMenuHighScoreDisplay(); 
+            updateProfileBadge(); 
+            closeProfileDropdown(); 
+            mainMenu.style.display = 'flex'; 
+            document.querySelector('.credits-footer').style.display = 'block';
+        }
 
         document.addEventListener('click', (e) => {
             const dd = document.getElementById('profile-dropdown');
