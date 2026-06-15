@@ -937,12 +937,24 @@ const trophySkinDatabase = [
   { id:'pastel_peach',    name:'Pesca Tender',        color:'#ffd4b8', source:'trophy' },
   { id:'pastel_coral',    name:'Corallo Tenue',       color:'#ffb3a7', source:'trophy' },
   { id:'pastel_lilac',    name:'Lilla Sogno',         color:'#d4b8e8', source:'trophy' },
-  { id:'pastel_cream',    name:'✨ Crema Leggendaria',color:'#fff5d6', source:'trophy' }
+  { id:'pastel_cream',    name:'✨ Crema Leggendaria',color:'#fff5d6', source:'trophy' },
+  { id:'glitch',          name:'👾 GLITCH [???]',     color:'glitch',  source:'secret' }
 ];
 function getAllSkins()         { return [...shopSkinDatabase, ...trophySkinDatabase]; }
 function getSkinById(id)       { return getAllSkins().find(s => s.id === id); }
-function getSkinColorStyle(sk) { if (!sk) return '#fff'; if (sk.color === 'rainbow') return 'linear-gradient(to right,red,orange,yellow,green,blue,violet)'; return sk.color; }
-function getSkinSourceLabel(src){ if(src==='trophy') return '🏆 Trofei'; if(src==='gacha') return '🎰 Spin'; if(src==='shop') return '🛒 Negozio'; return 'Gratis'; }
+function getSkinColorStyle(sk) {
+  if (!sk) return '#fff';
+  if (sk.color === 'rainbow') return 'linear-gradient(to right,red,orange,yellow,green,blue,violet)';
+  if (sk.color === 'glitch')  return 'linear-gradient(135deg,#ff2a5f,#00f0ff,#a855f7,#ffb700)';
+  return sk.color;
+}
+function getSkinSourceLabel(src){
+  if(src==='trophy')  return '🏆 Trofei';
+  if(src==='gacha')   return '🎰 Spin';
+  if(src==='shop')    return '🛒 Negozio';
+  if(src==='secret')  return '👾 Codice Segreto';
+  return 'Gratis';
+}
 
 // ═══════════════════════════════════════════════════════════
 //  MISSIONS
@@ -1855,8 +1867,17 @@ function gameLoop(timestamp) {
   const sk = getSkinById(currentSkinId);
   let playerColor = '#fff';
   if (sk) {
-    if (sk.color === 'rainbow') { rainbowHue = (rainbowHue + 120*dt) % 360; playerColor = `hsl(${rainbowHue},100%,60%)`; }
-    else playerColor = sk.color;
+    if (sk.color === 'rainbow') {
+      rainbowHue = (rainbowHue + 120*dt) % 360;
+      playerColor = `hsl(${rainbowHue},100%,60%)`;
+    } else if (sk.color === 'glitch') {
+      // Glitch: cicla tra 4 colori neon ogni ~80ms, con offset casuale
+      const glitchColors = ['#ff2a5f','#00f0ff','#a855f7','#ffb700','#10b981','#ffffff'];
+      const glitchIdx = Math.floor((Date.now() / 80)) % glitchColors.length;
+      playerColor = glitchColors[glitchIdx];
+    } else {
+      playerColor = sk.color;
+    }
   }
 
   // ── Trail ──
@@ -2083,6 +2104,143 @@ function gameOver() {
 
   gameoverMenu.style.display='flex';
 }
+
+// ═══════════════════════════════════════════════════════════
+//  🥚 EASTER EGG — KONAMI CODE + 5x TAP LOGO
+//  Sequenza: ↑↑↓↓←→←→BA  (tastiera)
+//  Mobile:   5 tap veloci sul titolo "CUBI PAZZI"
+// ═══════════════════════════════════════════════════════════
+(function() {
+  const KONAMI = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+  let konamiIdx = 0;
+  let godActive = false;
+  let godTimer  = 0;
+  let logoTaps  = 0;
+  let logoTapTimer = null;
+
+  // ── Konami listener ──
+  window.addEventListener('keydown', function(e) {
+    if (gameActive) return; // solo nei menu
+    if (e.key === KONAMI[konamiIdx]) {
+      konamiIdx++;
+      if (konamiIdx === KONAMI.length) {
+        konamiIdx = 0;
+        activateGodMode();
+      }
+    } else {
+      konamiIdx = e.key === KONAMI[0] ? 1 : 0;
+    }
+  });
+
+  // ── 5 tap veloci sul logo (mobile) ──
+  document.addEventListener('click', function(e) {
+    if (gameActive) return;
+    const logo = document.getElementById('menu-title');
+    if (!logo) return;
+    if (!logo.contains(e.target) && e.target !== logo) return;
+    logoTaps++;
+    clearTimeout(logoTapTimer);
+    if (logoTaps >= 5) {
+      logoTaps = 0;
+      activateGodMode();
+    } else {
+      logoTapTimer = setTimeout(function() { logoTaps = 0; }, 1200);
+    }
+  });
+
+  // ── Attivazione ──
+  function activateGodMode() {
+    if (godActive) return;
+    godActive = true;
+
+    // Sblocca la skin glitch se non già posseduta
+    const alreadyOwned = ownedSkins.includes('glitch');
+    if (!alreadyOwned) {
+      ownedSkins.push('glitch');
+      saveData();
+    }
+
+    showSecretPopup(alreadyOwned);
+  }
+
+  function showSecretPopup(alreadyOwned) {
+    const overlay = document.createElement('div');
+    overlay.id = 'god-overlay';
+    overlay.style.cssText = [
+      'position:fixed','top:0','left:0','width:100%','height:100%',
+      'background:rgba(0,0,0,0.92)','z-index:99999',
+      'display:flex','flex-direction:column',
+      'align-items:center','justify-content:center',
+      'gap:18px','text-align:center','padding:30px',
+      'font-family:Space Grotesk,sans-serif'
+    ].join(';');
+
+    // Emoji che cambia colore glitch
+    const glitchColors = ['#ff2a5f','#00f0ff','#a855f7','#ffb700','#10b981'];
+    let gcIdx = 0;
+
+    const rewardBlock = alreadyOwned
+      ? `<div style="background:#111622;border:1px solid #1f293d;border-radius:14px;padding:14px 20px;font-size:0.82rem;color:#5c6b84;max-width:280px;">
+           Hai già la skin 👾 GLITCH.<br>
+           <span style="color:#00f0ff">Sei un veterano del codice segreto.</span>
+         </div>`
+      : `<div style="background:linear-gradient(135deg,rgba(255,42,95,0.15),rgba(168,85,247,0.15));border:1px solid rgba(168,85,247,0.4);border-radius:16px;padding:16px 20px;max-width:280px;">
+           <div style="font-size:0.75rem;color:#5c6b84;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px">Skin sbloccata</div>
+           <div style="font-size:1.4rem;font-weight:700;color:#fff">👾 GLITCH <span style="font-size:0.7rem;color:#a855f7">[???]</span></div>
+           <div style="font-size:0.75rem;color:#9ca3af;margin-top:6px;line-height:1.5">
+             Cicla tra 6 colori neon ogni 80ms.<br>
+             Non acquistabile. Non droppa. Solo tua.
+           </div>
+         </div>`;
+
+    overlay.innerHTML = `
+      <div id="glitch-emoji" style="font-size:3.5rem;transition:filter 0.08s">👾</div>
+      <div style="font-size:1.5rem;font-weight:700;background:linear-gradient(135deg,#ff2a5f,#ffb700,#00f0ff,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-1px">
+        ${alreadyOwned ? 'LO SAPEVI GIÀ' : 'HAI TROVATO IL SEGRETO'}
+      </div>
+      <div style="font-size:0.88rem;color:#9ca3af;max-width:280px;line-height:1.6">
+        Nicolò ha nascosto questo codice qui dentro.<br>
+        Se lo stai leggendo sei ufficialmente un <strong style="color:#00f0ff">nerd certificato</strong>. 🏅
+      </div>
+      <div style="background:#111622;border:1px solid #1f293d;border-radius:14px;padding:12px 18px;font-size:0.78rem;color:#5c6b84;max-width:280px;line-height:1.6">
+        <span style="color:#ffb700;font-weight:700">⬆⬆⬇⬇⬅➡⬅➡🅱️🅰️</span><br>
+        Il codice Konami esiste dal 1986.<br>Tu l'hai trovato nel 2025. Bravo.
+      </div>
+      ${rewardBlock}
+      <button id="god-close-btn" style="background:linear-gradient(135deg,#ff2a5f,#a855f7);color:#fff;border:none;padding:14px 32px;border-radius:18px;font-size:1rem;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 0 24px rgba(255,42,95,0.35)">
+        ${alreadyOwned ? '👾 OK, lo so' : '👾 EQUIPAGGIA SUBITO'}
+      </button>
+    `;
+
+    if (!document.getElementById('easter-style')) {
+      const st = document.createElement('style');
+      st.id = 'easter-style';
+      st.textContent = '@keyframes spin360{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}';
+      document.head.appendChild(st);
+    }
+
+    document.body.appendChild(overlay);
+
+    // Animazione glitch sull'emoji
+    const glitchEl = document.getElementById('glitch-emoji');
+    const glitchAnim = setInterval(function() {
+      gcIdx = (gcIdx + 1) % glitchColors.length;
+      if (glitchEl) glitchEl.style.filter = `drop-shadow(0 0 12px ${glitchColors[gcIdx]})`;
+    }, 90);
+
+    document.getElementById('god-close-btn').addEventListener('click', function() {
+      clearInterval(glitchAnim);
+      overlay.remove();
+      godActive = false;
+      // Equipaggia automaticamente la skin glitch se appena sbloccata
+      if (!alreadyOwned) {
+        currentSkinId = 'glitch';
+        saveData();
+      }
+    });
+  }
+
+})();
 </script>
 </body>
 </html>
