@@ -16,8 +16,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>💥Cubi Pazzi💥</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
-<!-- QR Code library -->
-<script src="https://nicoloalberghina103-dot.github.io/Crazy_cube_/qrcode.min.js"></script>
 <style>
 :root {
   --bg-dark: #080b11;
@@ -504,157 +502,6 @@ canvas {
   animation: freeze-flash 0.4s ease forwards;
   border-radius: 4px;
 }
-
-/* ─── INVITA UN AMICO ─── */
-#invite-fab {
-  position: absolute;
-  bottom: 20px;
-  right: 16px;
-  z-index: 45;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  background: linear-gradient(135deg, #10b981, #059669);
-  border: none;
-  border-radius: 50px;
-  padding: 10px 16px 10px 12px;
-  cursor: pointer;
-  box-shadow: 0 4px 20px rgba(16,185,129,0.4), 0 0 0 0 rgba(16,185,129,0.4);
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: 0.3px;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-  animation: invite-pulse 2.8s ease-in-out infinite;
-  -webkit-tap-highlight-color: transparent;
-}
-#invite-fab:active { transform: scale(0.93); }
-#invite-fab .fab-icon { font-size: 1.1rem; line-height: 1; }
-@keyframes invite-pulse {
-  0%,100% { box-shadow: 0 4px 20px rgba(16,185,129,0.4), 0 0 0 0 rgba(16,185,129,0.35); }
-  50%      { box-shadow: 0 4px 20px rgba(16,185,129,0.4), 0 0 0 8px rgba(16,185,129,0); }
-}
-
-/* ─── INVITE MODAL ─── */
-#invite-modal-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(6, 8, 14, 0.88);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  z-index: 50;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-}
-#invite-modal-overlay.open { display: flex; }
-
-#invite-modal {
-  background: linear-gradient(160deg, #12192a 0%, #0d111a 100%);
-  border: 1px solid rgba(16,185,129,0.45);
-  border-radius: 26px;
-  padding: 28px 24px 24px;
-  width: 100%;
-  max-width: 320px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.7), 0 0 40px rgba(16,185,129,0.12);
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  position: relative;
-}
-
-#invite-modal-close {
-  position: absolute;
-  top: 14px; right: 14px;
-  width: 30px; height: 30px;
-  border-radius: 50%;
-  background: #1f293d;
-  border: 1px solid #374151;
-  color: #9ca3af;
-  font-size: 0.85rem;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: background 0.1s;
-  font-family: inherit;
-}
-#invite-modal-close:active { background: #283447; }
-
-.invite-modal-badge {
-  background: linear-gradient(135deg, rgba(16,185,129,0.18), rgba(16,185,129,0.06));
-  border: 1px solid rgba(16,185,129,0.3);
-  border-radius: 14px;
-  padding: 8px 16px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: #6ee7b7;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-}
-
-.invite-modal-title {
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: #fff;
-  margin: 0;
-  line-height: 1.25;
-}
-
-.invite-modal-sub {
-  font-size: 0.82rem;
-  color: #9ca3af;
-  line-height: 1.55;
-  margin: 0;
-  max-width: 260px;
-}
-
-#invite-qr-wrap {
-  background: #fff;
-  border-radius: 18px;
-  padding: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 30px rgba(16,185,129,0.2);
-  width: 180px;
-  height: 180px;
-}
-#invite-qr-wrap img,
-#invite-qr-wrap canvas {
-  width: 152px !important;
-  height: 152px !important;
-}
-
-.invite-modal-cta {
-  font-size: 0.78rem;
-  color: #5c6b84;
-  line-height: 1.5;
-  max-width: 240px;
-}
-.invite-modal-cta strong {
-  color: #10b981;
-}
-
-#invite-share-btn {
-  background: linear-gradient(135deg, #10b981, #059669);
-  color: #fff;
-  border: none;
-  border-radius: 14px;
-  padding: 13px 28px;
-  font-size: 0.95rem;
-  font-weight: 700;
-  font-family: 'Space Grotesk', sans-serif;
-  cursor: pointer;
-  width: 100%;
-  letter-spacing: 0.3px;
-  transition: transform 0.12s ease;
-  box-shadow: 0 4px 16px rgba(16,185,129,0.35);
-}
-#invite-share-btn:active { transform: scale(0.97); }
 </style>
 </head>
 <body>
@@ -690,45 +537,6 @@ canvas {
 
   <!-- DRAG GHOST -->
   <div id="drag-ghost"></div>
-
-  <!-- ══════════════════════════════════════════ -->
-  <!--  BOTTONE INVITA UN AMICO (FAB)            -->
-  <!-- ══════════════════════════════════════════ -->
-  <button id="invite-fab" onclick="openInviteModal()" title="Invita un amico">
-    <span class="fab-icon">🤝</span>
-    INVITA
-  </button>
-
-  <!-- ══════════════════════════════════════════ -->
-  <!--  MODALE INVITA UN AMICO                   -->
-  <!-- ══════════════════════════════════════════ -->
-  <div id="invite-modal-overlay">
-    <div id="invite-modal">
-      <button id="invite-modal-close" onclick="closeInviteModal()">✕</button>
-
-      <div class="invite-modal-badge">👾 Sfida i tuoi amici</div>
-
-      <p class="invite-modal-title">Porta nuovi giocatori<br>nell'arena!</p>
-
-      <div id="invite-qr-wrap">
-        <!-- QR code generato via JS -->
-      </div>
-
-      <p class="invite-modal-cta">
-        Inquadra il QR con la fotocamera oppure tocca<br>
-        <strong>Condividi</strong> per inviare il link direttamente.
-      </p>
-
-      <p class="invite-modal-sub">
-        Fai scoprire Cubi Pazzi a un amico —<br>
-        chi evita più cubi vince davvero! 🏆
-      </p>
-
-      <button id="invite-share-btn" onclick="shareInvite()">
-        📤 Condividi il link
-      </button>
-    </div>
-  </div>
 
   <!-- WELCOME -->
   <div id="welcome-screen" class="screen">
@@ -1860,14 +1668,20 @@ function triggerShield(slotNum) {
 }
 
 function triggerPush(slotNum) {
+  // Push fires even during freeze (thaw-and-blast combo allowed)
   consumeSlotCharge(slotNum);
   createExplosion(player.x, player.y, '#ffb700', 30);
+
+  // Immediately push every enemy: -150px Y, ±40px X relative to player
   enemies.forEach(function(e) {
     var dx = (e.x + e.size / 2) - player.x;
     e.y -= 150;
     e.x += dx > 0 ? 40 : -40;
   });
+
+  // Animated ring wave drawn on canvas
   spawnImpulseWave();
+
   var statusEl = document.getElementById('ingame-ability-status');
   if (statusEl) {
     statusEl.textContent = '💥 Impulso!';
@@ -1876,12 +1690,13 @@ function triggerPush(slotNum) {
 }
 
 function spawnImpulseWave() {
+  // Draw expanding ring directly on canvas via a separate animated loop
   var startTime = performance.now();
   var px = player.x;
   var py = player.y;
   function drawWave(ts) {
     var elapsed = ts - startTime;
-    var progress = elapsed / 350;
+    var progress = elapsed / 350; // 0→1 over 350ms
     if (progress >= 1) return;
     var radius = 20 + progress * 120;
     var alpha  = 1 - progress;
@@ -1900,10 +1715,12 @@ function spawnImpulseWave() {
 }
 
 function triggerFreeze(slotNum) {
-  if (freezeActive) return;
+  if (freezeActive) return; // already frozen
   consumeSlotCharge(slotNum);
   freezeActive = true;
-  freezeTimer  = FREEZE_DURATION;
+  freezeTimer  = FREEZE_DURATION; // 3.0 seconds
+
+  // Blue flash overlay drawn on canvas next frame via freezeActive flag
   document.getElementById('ingame-ability-status').textContent = '❄️ Congelato!';
 }
 
@@ -1936,10 +1753,12 @@ function startGameWithMode(mode) {
   if (gameMode === 'time') gameTimer = 60 * 60;
   else gameTimer = 0;
 
+  // ── Resolve loadout for this match ──
   matchSlot1AbilityId = null; matchSlot1Count = 0;
   matchSlot2AbilityId = null; matchSlot2Count = 0;
 
   if (gameMode !== 'pure') {
+    // Resolve each saved slot
     var slots = [
       { savedId: (loadoutSlot1 === 'null' ? null : loadoutSlot1), num: 1 },
       { savedId: (loadoutSlot2 === 'null' ? null : loadoutSlot2), num: 2 }
@@ -1951,6 +1770,8 @@ function startGameWithMode(mode) {
       if (inv <= 0) return;
       if (s.num === 1) matchSlot1AbilityId = sid;
       else             matchSlot2AbilityId = sid;
+
+      // All abilities are active — show current inventory count in HUD badge
       if (sid === 'shield')  { if (s.num===1) matchSlot1Count=inventoryShields; else matchSlot2Count=inventoryShields; }
       if (sid === 'slow')    { if (s.num===1) matchSlot1Count=inventorySlows;   else matchSlot2Count=inventorySlows; }
       if (sid === 'push')    { if (s.num===1) matchSlot1Count=inventoryPush;    else matchSlot2Count=inventoryPush; }
@@ -1986,11 +1807,13 @@ function startGameWithMode(mode) {
 function gameLoop(timestamp) {
   if (!gameActive) return;
 
+  // Delta time in seconds, clamped to 0.1s to avoid huge jumps after tab switch
   const dt = Math.min((timestamp - (lastFrameTime || timestamp)) / 1000, 0.1);
   lastFrameTime = timestamp;
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+  // ── Freeze countdown (in seconds) ──
   if (freezeActive) {
     freezeTimer -= dt;
     if (freezeTimer <= 0) {
@@ -2000,6 +1823,7 @@ function gameLoop(timestamp) {
     }
   }
 
+  // ── Slow countdown (in seconds) ──
   if (slowActive) {
     slowTimer -= dt;
     if (slowTimer <= 0) {
@@ -2008,11 +1832,13 @@ function gameLoop(timestamp) {
     }
   }
 
+  // ── Time mode timer ──
   if (gameMode === 'time') {
-    gameTimer -= dt * 60;
+    gameTimer -= dt * 60; // keep in frames for display compat
     if (gameTimer < 0) gameTimer = 0;
   }
 
+  // ── Trophy milestones ──
   let checkpoint = Math.floor(score / 10) * 10;
   if (checkpoint > lastTrophyCheckpoint) {
     let t = 5;
@@ -2021,9 +1847,11 @@ function gameLoop(timestamp) {
     lastTrophyCheckpoint = checkpoint;
   }
 
-  const baseSpeedPx = player.speedPx + score * 0.5;
+  // ── Player speed (px/sec) ──
+  const baseSpeedPx = player.speedPx + score * 0.5; // slight boost per score
   const speedMod    = (slowActive && !freezeActive) ? 0.7 : 1.0;
 
+  // Keyboard input
   if (keys['w']) player.y -= baseSpeedPx * speedMod * dt;
   if (keys['s']) player.y += baseSpeedPx * speedMod * dt;
   if (keys['a']) player.x -= baseSpeedPx * speedMod * dt;
@@ -2035,6 +1863,7 @@ function gameLoop(timestamp) {
   player.x = Math.max(player.radius, Math.min(canvas.width - player.radius, player.x));
   player.y = Math.max(player.radius, Math.min(canvas.height - player.radius, player.y));
 
+  // ── Skin color ──
   const sk = getSkinById(currentSkinId);
   let playerColor = '#fff';
   if (sk) {
@@ -2042,6 +1871,7 @@ function gameLoop(timestamp) {
       rainbowHue = (rainbowHue + 120*dt) % 360;
       playerColor = `hsl(${rainbowHue},100%,60%)`;
     } else if (sk.color === 'glitch') {
+      // Glitch: cicla tra 4 colori neon ogni ~80ms, con offset casuale
       const glitchColors = ['#ff2a5f','#00f0ff','#a855f7','#ffb700','#10b981','#ffffff'];
       const glitchIdx = Math.floor((Date.now() / 80)) % glitchColors.length;
       playerColor = glitchColors[glitchIdx];
@@ -2050,6 +1880,7 @@ function gameLoop(timestamp) {
     }
   }
 
+  // ── Trail ──
   playerTrail.push({ x: player.x, y: player.y, col: playerColor });
   if (playerTrail.length > 9) playerTrail.shift();
   playerTrail.forEach((pt, i) => {
@@ -2060,16 +1891,19 @@ function gameLoop(timestamp) {
   });
   ctx.globalAlpha = 1;
 
+  // ── Draw player ──
   ctx.fillStyle = playerColor;
   ctx.beginPath(); ctx.arc(player.x, player.y, player.radius, 0, Math.PI*2); ctx.fill();
 
+  // ── Shield ring ──
   if (shieldActive) {
     ctx.strokeStyle = '#00f0ff'; ctx.lineWidth = 3;
     ctx.beginPath(); ctx.arc(player.x, player.y, player.radius+6, 0, Math.PI*2); ctx.stroke();
   }
 
+  // ── Freeze ring (arc showing time remaining) ──
   if (freezeActive) {
-    var freezeProg = freezeTimer / FREEZE_DURATION;
+    var freezeProg = freezeTimer / FREEZE_DURATION; // 0→1
     ctx.save();
     ctx.strokeStyle = 'rgba(125,211,252,0.9)'; ctx.lineWidth = 3;
     ctx.shadowColor = '#7dd3fc'; ctx.shadowBlur = 12;
@@ -2077,10 +1911,12 @@ function gameLoop(timestamp) {
     ctx.arc(player.x, player.y, player.radius + 10, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * freezeProg, false);
     ctx.stroke();
     ctx.restore();
+    // Screen border tint
     ctx.strokeStyle = 'rgba(125,211,252,0.18)'; ctx.lineWidth = 12;
     ctx.strokeRect(0, 0, canvas.width, canvas.height);
   }
 
+  // ── Slow tint + ring ──
   if (slowActive && !freezeActive) {
     ctx.strokeStyle='rgba(168,85,247,0.18)'; ctx.lineWidth=12; ctx.strokeRect(0,0,canvas.width,canvas.height);
     var slowProg = slowTimer / SLOW_DURATION;
@@ -2093,6 +1929,7 @@ function gameLoop(timestamp) {
     ctx.restore();
   }
 
+  // ── Magnet ring ──
   if (magnetTimer > 0) {
     magnetTimer -= dt * 60;
     if (magnetTimer < 0) magnetTimer = 0;
@@ -2102,6 +1939,7 @@ function gameLoop(timestamp) {
     ctx.stroke(); ctx.restore();
   }
 
+  // ── Timer display (time mode) ──
   if (gameMode === 'time') {
     let timerSec = Math.ceil(gameTimer / 60);
     let timerPct = Math.max(0, Math.min(1, gameTimer / (60*60)));
@@ -2118,10 +1956,12 @@ function gameLoop(timestamp) {
     ctx.restore();
   }
 
+  // ── Spawn rate ──
   const SPAWN_BASE = 0.045;
-  const SPAWN_SCALE = Math.min(score / 200, 1);
+  const SPAWN_SCALE = Math.min(score / 200, 1); // ramp spawn rate with score
   const spawnChance = SPAWN_BASE + SPAWN_SCALE * 0.03;
 
+  // ── Power-ups (magnet) ──
   if (gameMode !== 'pure' && Math.random() < 0.0015) {
     powerUps.push({ x: Math.random()*(canvas.width-24)+12, y: -15, radius: 11 });
   }
@@ -2136,6 +1976,7 @@ function gameLoop(timestamp) {
     if (p.y > canvas.height) powerUps.splice(i,1);
   }
 
+  // ── Gold coins ──
   if (Math.random() < 0.015) goldCoins.push({ x:Math.random()*(canvas.width-12)+6, y:-12, radius:6 });
   for (let i=goldCoins.length-1; i>=0; i--) {
     const c = goldCoins[i];
@@ -2158,12 +1999,15 @@ function gameLoop(timestamp) {
     if (c.y > canvas.height) goldCoins.splice(i,1);
   }
 
+  // ── Enemies ──
   if (!freezeActive && Math.random() < spawnChance) {
     const rnd = Math.random();
     let size, speedMult, color;
     if      (rnd < 0.20) { size=14;  speedMult=1.5;  color='#f43f5e'; }
     else if (rnd > 0.85) { size=46;  speedMult=0.65; color='#b91c1c'; }
     else                 { size=24;  speedMult=1.0;  color='#ff2a5f'; }
+
+    // Delta-time enemy speed in px/sec
     const baseSpeedPxSec = (BASE_ENEMY_SPEED + score * SPEED_PER_SCORE) * speedMult;
     enemies.push({ x:Math.random()*(canvas.width-size), y:-size, size, baseSpeedPxSec, color, frozen:false });
   }
@@ -2181,10 +2025,12 @@ function gameLoop(timestamp) {
     ctx.fillRect(e.x, e.y, e.size, e.size);
     if (freezeActive) ctx.restore();
 
+    // Collision
     const cx = Math.max(e.x, Math.min(player.x, e.x+e.size));
     const cy = Math.max(e.y, Math.min(player.y, e.y+e.size));
     if (Math.hypot(player.x-cx, player.y-cy) < player.radius) {
       if (freezeActive) {
+        // frozen cube just gets destroyed
         createExplosion(e.x+e.size/2, e.y+e.size/2, '#7dd3fc', 15);
         enemies.splice(i,1); continue;
       }
@@ -2199,6 +2045,7 @@ function gameLoop(timestamp) {
         createExplosion(e.x+e.size/2, e.y+e.size/2, e.color, 20);
         enemies.splice(i,1); continue;
       }
+      // Classic / pure: game over
       createExplosion(player.x, player.y, playerColor, 35);
       gameOver(); return;
     }
@@ -2209,6 +2056,7 @@ function gameLoop(timestamp) {
     }
   }
 
+  // ── Particles ──
   for (let i=particles.length-1; i>=0; i--) {
     const p = particles[i];
     p.x += p.vx; p.y += p.vy; p.alpha -= p.decay;
@@ -2217,6 +2065,7 @@ function gameLoop(timestamp) {
     ctx.beginPath(); ctx.arc(p.x,p.y,p.radius,0,Math.PI*2); ctx.fill(); ctx.restore();
   }
 
+  // ── Check end conditions ──
   if (gameMode === 'time' && gameTimer <= 0) { gameOver(); return; }
 
   requestAnimationFrame(gameLoop);
@@ -2234,8 +2083,12 @@ function gameOver() {
 
   msnStats.totCoins += currentMatchCoins;
   msnStats.totCubes += score;
-  if (msnStates.s1===0 && score>=40 && !shieldActive) msnStates.s1=1;
+  if (msnStates.s1===0 && score>=40 && !shieldActive) msnStates.s1=1; // used no shield (shield wasn't active when game ended after absorb)
   if (msnStates.s2===0 && currentMatchCoins>=15) msnStates.s2=1;
+
+  // Return unused consumable actives to inventory
+  // (passives were already deducted at start; actives deduct on use)
+  // Nothing to return — actives consume on fire, passives deducted at start.
 
   updateMissionProgress(); saveData();
 
@@ -2253,82 +2106,9 @@ function gameOver() {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  🤝 INVITA UN AMICO — MODAL
-// ═══════════════════════════════════════════════════════════
-const GAME_URL = 'https://nicoloalberghina103-dot.github.io/cubi-pazzi/';
-let qrGenerated = false;
-
-function openInviteModal() {
-  // Nascondi il modale se già aperto
-  const overlay = document.getElementById('invite-modal-overlay');
-  overlay.classList.add('open');
-
-  // Genera il QR code solo la prima volta
-  if (!qrGenerated) {
-    const wrap = document.getElementById('invite-qr-wrap');
-    wrap.innerHTML = ''; // pulisce eventuali residui
-    try {
-      new QRCode(wrap, {
-        text: window.location.href || GAME_URL,
-        width: 152,
-        height: 152,
-        colorDark: '#080b11',
-        colorLight: '#ffffff',
-        correctLevel: QRCode.CorrectLevel.M
-      });
-      qrGenerated = true;
-    } catch(e) {
-      // Fallback: testo con URL
-      wrap.innerHTML = `<div style="font-size:0.7rem;color:#5c6b84;text-align:center;padding:8px;word-break:break-all;">${window.location.href}</div>`;
-    }
-  }
-}
-
-function closeInviteModal() {
-  document.getElementById('invite-modal-overlay').classList.remove('open');
-}
-
-async function shareInvite() {
-  const url = window.location.href || GAME_URL;
-  const text = '🎮 Stai giocando a Cubi Pazzi? Sfidami! Evita cubi, sblocca skin e sali in classifica. Aprilo qui:';
-  if (navigator.share) {
-    try {
-      await navigator.share({ title: '💥 Cubi Pazzi', text, url });
-    } catch(e) { /* annullato dall'utente */ }
-  } else {
-    // Fallback: copia negli appunti
-    try {
-      await navigator.clipboard.writeText(url);
-      const btn = document.getElementById('invite-share-btn');
-      const orig = btn.textContent;
-      btn.textContent = '✅ Link copiato!';
-      setTimeout(() => btn.textContent = orig, 2000);
-    } catch(e) {
-      alert('Copia questo link: ' + url);
-    }
-  }
-}
-
-// Chiudi il modale toccando fuori
-document.getElementById('invite-modal-overlay').addEventListener('click', function(e) {
-  if (e.target === this) closeInviteModal();
-});
-
-// Nascondi il FAB durante la partita, mostralo nei menu
-const inviteFab = document.getElementById('invite-fab');
-const _origStartGame = startGameWithMode;
-// Sovrapponi per nascondere/mostrare il FAB
-const _fabObserver = new MutationObserver(() => {
-  const inGame = gameActive;
-  inviteFab.style.display = inGame ? 'none' : 'flex';
-});
-// Polling leggero per sincronizzare il FAB con gameActive
-setInterval(() => {
-  inviteFab.style.display = gameActive ? 'none' : 'flex';
-}, 500);
-
-// ═══════════════════════════════════════════════════════════
 //  🥚 EASTER EGG — KONAMI CODE + 5x TAP LOGO
+//  Sequenza: ↑↑↓↓←→←→BA  (tastiera)
+//  Mobile:   5 tap veloci sul titolo "CUBI PAZZI"
 // ═══════════════════════════════════════════════════════════
 (function() {
   const KONAMI = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
@@ -2338,8 +2118,9 @@ setInterval(() => {
   let logoTaps  = 0;
   let logoTapTimer = null;
 
+  // ── Konami listener ──
   window.addEventListener('keydown', function(e) {
-    if (gameActive) return;
+    if (gameActive) return; // solo nei menu
     if (e.key === KONAMI[konamiIdx]) {
       konamiIdx++;
       if (konamiIdx === KONAMI.length) {
@@ -2351,6 +2132,7 @@ setInterval(() => {
     }
   });
 
+  // ── 5 tap veloci sul logo (mobile) ──
   document.addEventListener('click', function(e) {
     if (gameActive) return;
     const logo = document.getElementById('menu-title');
@@ -2366,14 +2148,18 @@ setInterval(() => {
     }
   });
 
+  // ── Attivazione ──
   function activateGodMode() {
     if (godActive) return;
     godActive = true;
+
+    // Sblocca la skin glitch se non già posseduta
     const alreadyOwned = ownedSkins.includes('glitch');
     if (!alreadyOwned) {
       ownedSkins.push('glitch');
       saveData();
     }
+
     showSecretPopup(alreadyOwned);
   }
 
@@ -2389,6 +2175,7 @@ setInterval(() => {
       'font-family:Space Grotesk,sans-serif'
     ].join(';');
 
+    // Emoji che cambia colore glitch
     const glitchColors = ['#ff2a5f','#00f0ff','#a855f7','#ffb700','#10b981'];
     let gcIdx = 0;
 
@@ -2434,6 +2221,7 @@ setInterval(() => {
 
     document.body.appendChild(overlay);
 
+    // Animazione glitch sull'emoji
     const glitchEl = document.getElementById('glitch-emoji');
     const glitchAnim = setInterval(function() {
       gcIdx = (gcIdx + 1) % glitchColors.length;
@@ -2444,6 +2232,7 @@ setInterval(() => {
       clearInterval(glitchAnim);
       overlay.remove();
       godActive = false;
+      // Equipaggia automaticamente la skin glitch se appena sbloccata
       if (!alreadyOwned) {
         currentSkinId = 'glitch';
         saveData();
