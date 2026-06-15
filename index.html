@@ -1541,7 +1541,8 @@ document.getElementById('btn-slot-2').addEventListener('pointerdown', e => {
 window.addEventListener('keydown', e => {
   let k = e.key.toLowerCase();
   if (k==='arrowup')k='w'; if(k==='arrowdown')k='s'; if(k==='arrowleft')k='a'; if(k==='arrowright')k='d';
-  keys[k] = true; isMouseMoving = false;
+  keys[k] = true;
+  isMouseMoving = false;
   if (gameActive) {
     if (e.key==='1') activateSlot(1);
     if (e.key==='2') activateSlot(2);
@@ -1563,6 +1564,7 @@ canvas.addEventListener('mousemove', e => {
 
 window.addEventListener('touchstart', e => {
   if (!gameActive || e.target.closest('#ingame-ui')) return;
+  isMouseMoving = false;
   isDragging = true;
   const t = e.touches[0];
   touchStartPos  = { x: t.clientX, y: t.clientY };
@@ -1571,6 +1573,7 @@ window.addEventListener('touchstart', e => {
 
 window.addEventListener('touchmove', e => {
   if (!gameActive || !isDragging) return;
+  isMouseMoving = false;
   const t = e.touches[0];
   player.x = playerStartPos.x + (t.clientX - touchStartPos.x) * 1.3;
   player.y = playerStartPos.y + (t.clientY - touchStartPos.y) * 1.3;
@@ -1841,7 +1844,7 @@ function gameLoop(timestamp) {
   if (keys['s']) player.y += baseSpeedPx * speedMod * dt;
   if (keys['a']) player.x -= baseSpeedPx * speedMod * dt;
   if (keys['d']) player.x += baseSpeedPx * speedMod * dt;
-  if (isMouseMoving) {
+  if (isMouseMoving && !isDragging) {
     player.x += (mousePos.x - player.x) * Math.min(1, 8 * dt);
     player.y += (mousePos.y - player.y) * Math.min(1, 8 * dt);
   }
