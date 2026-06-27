@@ -14,7 +14,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#080b11">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>💥CubiPazzi💥</title>
+<title>💥Cubix💥</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
 <!-- QR Code library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -720,7 +720,7 @@ canvas {
       </p>
 
       <p class="invite-modal-sub">
-        Fai scoprire Cubi Pazzi a un amico —<br>
+        Fai scoprire Cubix a un amico —<br>
         chi evita più cubi vince davvero! 🏆
       </p>
 
@@ -735,7 +735,7 @@ canvas {
     <div class="menu-main" style="gap:18px;">
       <div class="welcome-icon">📲</div>
       <h2 class="welcome-title">Aggiungi alla Home</h2>
-      <p class="welcome-text">Per un'esperienza migliore aggiungi Cubi Pazzi alla schermata Home del tuo dispositivo.</p>
+      <p class="welcome-text">Per un'esperienza migliore aggiungi Cubix alla schermata Home del tuo dispositivo.</p>
       <div class="welcome-steps" id="welcome-steps-box">
         <h3>Come fare</h3>
         <ol id="welcome-steps-list">
@@ -782,7 +782,7 @@ canvas {
     </div>
 
     <div class="menu-main">
-      <div class="logo-box"><h1 id="menu-title">CUBI PAZZI</h1></div>
+      <div class="logo-box"><h1 id="menu-title">CUBIX</h1></div>
       <div class="menu-actions">
         <button class="btn" onclick="showModeSelection()">AVVIA PARTITA</button>
         <button class="btn btn-loadout" onclick="openLoadout()">⚡ EQUIPAGGIA ABILITÀ</button>
@@ -1036,7 +1036,9 @@ if (loadoutSlot2 === 'null') loadoutSlot2 = null;
 
 let msnStats        = JSON.parse(localStorage.getItem('cp_msn_stats'))   || { totCoins: 0, totCubes: 0, lastDailyReset: "" };
 let msnStates       = JSON.parse(localStorage.getItem('cp_msn_states'))  || { c1:0, c2:0, s1:0, s2:0, d1:0, d2:0 };
-let msnDailyCounters= JSON.parse(localStorage.getItem('cp_msn_daily'))   || { gamesToday:0, spinsToday:0 };
+let msnDailyCounters= JSON.parse(localStorage.getItem('cp_msn_daily'))   || { gamesToday:0, spinsToday:0, coinsToday:0, cubesToday:0 };
+msnDailyCounters.coinsToday = msnDailyCounters.coinsToday || 0;
+msnDailyCounters.cubesToday = msnDailyCounters.cubesToday || 0;
 
 function saveData() {
   localStorage.setItem('cp_coins',              coins);
@@ -1152,12 +1154,12 @@ function getSkinSourceLabel(src){
 //  MISSIONS
 // ═══════════════════════════════════════════════════════════
 const missionDatabase = [
-  { id:'c1', cat:'CUMULATIVE',      title:'🪙 Collezionista', desc:'Raccogli 150 monete totali.',    target:150, reward:50, getProgress:()=>msnStats.totCoins },
-  { id:'c2', cat:'CUMULATIVE',      title:'🟥 Sopravvissuto', desc:'Evita 500 cubi totali.',         target:500, reward:75, getProgress:()=>msnStats.totCubes },
-  { id:'s1', cat:"SFIDA D'ABILITÀ", title:'🚀 Asso del Volante', desc:'40 punti senza usare scudi.', target:40,  reward:40, getProgress:()=>0, customCheck:true },
-  { id:'s2', cat:"SFIDA D'ABILITÀ", title:'👑 Febbre dell\'Oro', desc:'15 monete in una partita.',   target:15,  reward:30, getProgress:()=>0, customCheck:true },
-  { id:'d1', cat:'GIORNALIERE',     title:'🕹️ Spirito Arcade', desc:'Avvia 3 partite oggi.',        target:3,   reward:25, getProgress:()=>msnDailyCounters.gamesToday },
-  { id:'d2', cat:'GIORNALIERE',     title:'🎰 Tenta la Fortuna', desc:'Gira Lucky Spin 1 volta.',   target:1,   reward:20, getProgress:()=>msnDailyCounters.spinsToday }
+  { id:'c1', cat:'GIORNALIERE', title:'🪙 Collezionista', desc:'Raccogli 150 monete oggi.',    target:150, reward:50, getProgress:()=>msnDailyCounters.coinsToday },
+  { id:'c2', cat:'GIORNALIERE', title:'🟥 Sopravvissuto', desc:'Evita 500 cubi oggi.',         target:500, reward:75, getProgress:()=>msnDailyCounters.cubesToday },
+  { id:'s1', cat:'GIORNALIERE', title:'🚀 Asso del Volante', desc:'40 punti senza usare scudi.', target:40,  reward:40, getProgress:()=>0, customCheck:true },
+  { id:'s2', cat:'GIORNALIERE', title:'👑 Febbre dell\'Oro', desc:'15 monete in una partita.',   target:15,  reward:30, getProgress:()=>0, customCheck:true },
+  { id:'d1', cat:'GIORNALIERE', title:'🕹️ Spirito Arcade', desc:'Avvia 3 partite oggi.',        target:3,   reward:25, getProgress:()=>msnDailyCounters.gamesToday },
+  { id:'d2', cat:'GIORNALIERE', title:'🎰 Tenta la Fortuna', desc:'Gira Lucky Spin 1 volta.',   target:1,   reward:20, getProgress:()=>msnDailyCounters.spinsToday }
 ];
 function checkDailyReset() {
   const today = new Date().toDateString();
@@ -1165,8 +1167,9 @@ function checkDailyReset() {
     msnStats.lastDailyReset = today;
     msnDailyCounters.gamesToday = 0;
     msnDailyCounters.spinsToday = 0;
-    if (msnStates.d1 === 2) msnStates.d1 = 0;
-    if (msnStates.d2 === 2) msnStates.d2 = 0;
+    msnDailyCounters.coinsToday = 0;
+    msnDailyCounters.cubesToday = 0;
+    Object.keys(msnStates).forEach(k => { if (msnStates[k] === 2) msnStates[k] = 0; });
     saveData();
   }
 }
@@ -1305,8 +1308,8 @@ function initWelcomeScreen() {
 // ═══════════════════════════════════════════════════════════
 function updateMenuHighScoreDisplay() {
   document.getElementById('menu-title').innerHTML = highScore > 0
-    ? `CUBI PAZZI<br><span style="font-size:1.2rem;color:var(--neon-blue);">RECORD: ${highScore}</span>`
-    : `CUBI PAZZI`;
+    ? `CUBIX<br><span style="font-size:1.2rem;color:var(--neon-blue);">RECORD: ${highScore}</span>`
+    : `CUBIX`;
 }
 
 function showModeSelection()         { closeProfileDropdown(); mainMenu.style.display='none'; modeMenu.style.display='flex'; }
@@ -2013,7 +2016,7 @@ function gameLoop(timestamp) {
     if (gameTimer < 0) gameTimer = 0;
   }
 
-  let checkpoint = Math.floor(score / 10) * 10;
+  let checkpoint = Math.floor(score / 5) * 5;
   if (checkpoint > lastTrophyCheckpoint) {
     let t = 5;
     currentMatchTrophies += t;
@@ -2234,6 +2237,8 @@ function gameOver() {
 
   msnStats.totCoins += currentMatchCoins;
   msnStats.totCubes += score;
+  msnDailyCounters.coinsToday += currentMatchCoins;
+  msnDailyCounters.cubesToday += score;
   if (msnStates.s1===0 && score>=40 && !shieldActive) msnStates.s1=1;
   if (msnStates.s2===0 && currentMatchCoins>=15) msnStates.s2=1;
 
@@ -2290,10 +2295,10 @@ function closeInviteModal() {
 
 async function shareInvite() {
   const url = window.location.href || GAME_URL;
-  const text = '🎮 Stai giocando a Cubi Pazzi? Sfidami! Evita cubi, sblocca skin e sali in classifica. Aprilo qui:';
+  const text = '🎮 Stai giocando a Cubix? Sfidami! Evita cubi, sblocca skin e sali in classifica. Aprilo qui:';
   if (navigator.share) {
     try {
-      await navigator.share({ title: '💥 Cubi Pazzi', text, url });
+      await navigator.share({ title: '💥 Cubix', text, url });
     } catch(e) { /* annullato dall'utente */ }
   } else {
     // Fallback: copia negli appunti
