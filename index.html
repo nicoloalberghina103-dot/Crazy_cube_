@@ -1021,7 +1021,7 @@ let inventoryShields = parseInt(localStorage.getItem('cp_inv_shields'))|| 0;
 let inventorySlows   = parseInt(localStorage.getItem('cp_inv_slows'))  || 0;
 let inventoryPush    = parseInt(localStorage.getItem('cp_inv_push'))   || 0;
 let inventoryFreeze  = parseInt(localStorage.getItem('cp_inv_freeze')) || 0;
-let totalTrophies  = Math.min(100000, parseInt(localStorage.getItem('cp_trophies')) || 0);
+let totalTrophies  = Math.min(20000, parseInt(localStorage.getItem('cp_trophies')) || 0);
 let unlockedRewards= JSON.parse(localStorage.getItem('cp_unlocked_rewards')) || {};
 let currentSkinId  = localStorage.getItem('cp_currentSkin')  || 'white';
 let ownedSkins     = JSON.parse(localStorage.getItem('cp_ownedSkins')) || ['white'];
@@ -1132,6 +1132,7 @@ const trophySkinDatabase = [
   { id:'pastel_coral',    name:'Corallo Tenue',       color:'#ffb3a7', source:'trophy' },
   { id:'pastel_lilac',    name:'Lilla Sogno',         color:'#d4b8e8', source:'trophy' },
   { id:'pastel_cream',    name:'✨ Crema Leggendaria',color:'#fff5d6', source:'trophy' },
+  { id:'cosmic',          name:'🛸 Materia Cosmica',  color:'cosmic',  source:'trophy' },
   { id:'glitch',          name:'👾 GLITCH [???]',     color:'glitch',  source:'secret' }
 ];
 function getAllSkins()         { return [...shopSkinDatabase, ...trophySkinDatabase]; }
@@ -1140,6 +1141,7 @@ function getSkinColorStyle(sk) {
   if (!sk) return '#fff';
   if (sk.color === 'rainbow') return 'linear-gradient(to right,red,orange,yellow,green,blue,violet)';
   if (sk.color === 'glitch')  return 'linear-gradient(135deg,#ff2a5f,#00f0ff,#a855f7,#ffb700)';
+  if (sk.color === 'cosmic')  return 'conic-gradient(from 0deg,#ff2a5f,#a855f7,#00f0ff,#10b981,#ffb700,#ff2a5f)';
   return sk.color;
 }
 function getSkinSourceLabel(src){
@@ -1184,33 +1186,25 @@ function updateMissionProgress() {
 //  TROPHY ROAD
 // ═══════════════════════════════════════════════════════════
 const rewardMilestones = [
-  { trophies:15,    id:'r_15',    icon:'🛡️', label:'Scudo x1',         reward:()=>{ inventoryShields++;                        return '🛡️ Scudo!'; } },
-  { trophies:30,    id:'r_30',    icon:'🟣', label:'Rallenta x1',      reward:()=>{ inventorySlows++;                          return '🟣 Rallenta!'; } },
-  { trophies:50,    id:'r_50',    icon:'🪙', label:'+50 monete',       reward:()=>{ coins+=50;                                return '🪙 +50 monete!'; } },
-  { trophies:100,   id:'r_100',   icon:'🌿', label:'Skin Menta',        reward:()=>{ if(!ownedSkins.includes('pastel_mint')) ownedSkins.push('pastel_mint'); return '🌿 Menta Dolce!'; } },
-  { trophies:200,   id:'r_200',   icon:'🪙', label:'+100 monete',      reward:()=>{ coins+=100;                               return '🪙 +100!'; } },
-  { trophies:350,   id:'r_350',   icon:'🌸', label:'Skin Rosa',         reward:()=>{ if(!ownedSkins.includes('pastel_pink')) ownedSkins.push('pastel_pink'); return '🌸 Rosa Cipria!'; } },
-  { trophies:500,   id:'r_500',   icon:'🛡️', label:'Scudo x2',         reward:()=>{ inventoryShields+=2;                       return '🛡️ Scudo x2!'; } },
-  { trophies:750,   id:'r_750',   icon:'🪙', label:'+150 monete',      reward:()=>{ coins+=150;                               return '🪙 +150!'; } },
-  { trophies:1000,  id:'r_1k',    icon:'💜', label:'Skin Lavanda',      reward:()=>{ if(!ownedSkins.includes('pastel_lavender')) ownedSkins.push('pastel_lavender'); return '💜 Lavanda!'; } },
-  { trophies:1500,  id:'r_1500',  icon:'🟣', label:'Rallenta x3',      reward:()=>{ inventorySlows+=3;                         return '🟣 Rallenta x3!'; } },
-  { trophies:2000,  id:'r_2k',    icon:'🩵', label:'Skin Cielo',        reward:()=>{ if(!ownedSkins.includes('pastel_sky')) ownedSkins.push('pastel_sky'); return '🩵 Cielo!'; } },
-  { trophies:3000,  id:'r_3k',    icon:'🪙', label:'+300 monete',      reward:()=>{ coins+=300;                               return '🪙 +300!'; } },
-  { trophies:4500,  id:'r_4500',  icon:'🍑', label:'Skin Pesca',        reward:()=>{ if(!ownedSkins.includes('pastel_peach')) ownedSkins.push('pastel_peach'); return '🍑 Pesca!'; } },
-  { trophies:6000,  id:'r_6k',    icon:'🛡️', label:'Scudo x5',         reward:()=>{ inventoryShields+=5; inventorySlows+=2;    return '🛡️ Scudo x5!'; } },
-  { trophies:8000,  id:'r_8k',    icon:'🪙', label:'+800 monete',      reward:()=>{ coins+=800;                               return '🪙 +800!'; } },
-  { trophies:10000, id:'r_10k',   icon:'🪸', label:'Skin Corallo',      reward:()=>{ if(!ownedSkins.includes('pastel_coral')) ownedSkins.push('pastel_coral'); return '🪸 Corallo!'; } },
-  { trophies:12500, id:'r_12500', icon:'🟣', label:'Rallenta x5',      reward:()=>{ inventorySlows+=5;                         return '🟣 Rallenta x5!'; } },
-  { trophies:15000, id:'r_15k',   icon:'🪙', label:'+1.000 monete',    reward:()=>{ coins+=1000;                              return '🪙 +1.000!'; } },
-  { trophies:20000, id:'r_20k',   icon:'🔮', label:'Skin Lilla',        reward:()=>{ if(!ownedSkins.includes('pastel_lilac')) ownedSkins.push('pastel_lilac'); return '🔮 Lilla!'; } },
-  { trophies:25000, id:'r_25k',   icon:'🪙', label:'+2.500 monete',    reward:()=>{ coins+=2500;                              return '🪙 +2.500!'; } },
-  { trophies:30000, id:'r_30k',   icon:'🛡️', label:'Scudo x10',        reward:()=>{ inventoryShields+=10;                      return '🛡️ x10!'; } },
-  { trophies:40000, id:'r_40k',   icon:'🪙', label:'+4.000 monete',    reward:()=>{ coins+=4000;                              return '🪙 +4.000!'; } },
-  { trophies:50000, id:'r_50k',   icon:'💎', label:'Mega Pacchetto',    reward:()=>{ inventoryShields+=10; inventorySlows+=10; coins+=5000; return '💎 Mega!'; } },
-  { trophies:65000, id:'r_65k',   icon:'🪙', label:'+6.500 monete',    reward:()=>{ coins+=6500;                              return '🪙 +6.500!'; } },
-  { trophies:75000, id:'r_75k',   icon:'🛡️', label:'Scudo x15',        reward:()=>{ inventoryShields+=15; inventorySlows+=5;   return '🛡️ x15!'; } },
-  { trophies:85000, id:'r_85k',   icon:'🪙', label:'+8.500 monete',    reward:()=>{ coins+=8500;                              return '🪙 +8.500!'; } },
-  { trophies:100000,id:'r_100k',  icon:'✨', label:'LEGENDA 100K',      reward:()=>{ inventoryShields+=20; inventorySlows+=20; coins+=10000; if(!ownedSkins.includes('pastel_cream')) ownedSkins.push('pastel_cream'); return '✨ LEGGENDA!'; } }
+  { trophies:15,    id:'r_15',    icon:'🛡️', label:'Scudo x1',              reward:()=>{ inventoryShields++;                        return '🛡️ Scudo!'; } },
+  { trophies:30,    id:'r_30',    icon:'🟣', label:'Rallenta x1',           reward:()=>{ inventorySlows++;                          return '🟣 Rallenta!'; } },
+  { trophies:50,    id:'r_50',    icon:'🪙', label:'+50 monete',            reward:()=>{ coins+=50;                                return '🪙 +50 monete!'; } },
+  { trophies:75,    id:'r_75',    icon:'💥', label:'Impulso x1',            reward:()=>{ inventoryPush++;                           return '💥 Impulso!'; } },
+  { trophies:100,   id:'r_100',   icon:'🌿', label:'Skin Menta',            reward:()=>{ if(!ownedSkins.includes('pastel_mint')) ownedSkins.push('pastel_mint'); return '🌿 Menta Dolce!'; } },
+  { trophies:150,   id:'r_150',   icon:'🪙', label:'+100 monete',           reward:()=>{ coins+=100;                               return '🪙 +100!'; } },
+  { trophies:250,   id:'r_250',   icon:'🌸', label:'Skin Rosa',             reward:()=>{ if(!ownedSkins.includes('pastel_pink')) ownedSkins.push('pastel_pink'); return '🌸 Rosa Cipria!'; } },
+  { trophies:400,   id:'r_400',   icon:'❄️', label:'Congelamento x1',       reward:()=>{ inventoryFreeze++;                         return '❄️ Congelamento!'; } },
+  { trophies:600,   id:'r_600',   icon:'🛡️', label:'Scudo x2 + Rallenta x1', reward:()=>{ inventoryShields+=2; inventorySlows+=1;    return '🛡️🟣 Pacchetto!'; } },
+  { trophies:900,   id:'r_900',   icon:'💜', label:'Skin Lavanda',          reward:()=>{ if(!ownedSkins.includes('pastel_lavender')) ownedSkins.push('pastel_lavender'); return '💜 Lavanda!'; } },
+  { trophies:1300,  id:'r_1300',  icon:'🪙', label:'+200 monete',           reward:()=>{ coins+=200;                               return '🪙 +200!'; } },
+  { trophies:1800,  id:'r_1800',  icon:'🩵', label:'Skin Cielo',            reward:()=>{ if(!ownedSkins.includes('pastel_sky')) ownedSkins.push('pastel_sky'); return '🩵 Cielo!'; } },
+  { trophies:2500,  id:'r_2500',  icon:'🟣', label:'Rallenta x3 + Scudo x2', reward:()=>{ inventorySlows+=3; inventoryShields+=2;    return '🟣🛡️ Pacchetto x2!'; } },
+  { trophies:3500,  id:'r_3500',  icon:'🍑', label:'Skin Pesca',            reward:()=>{ if(!ownedSkins.includes('pastel_peach')) ownedSkins.push('pastel_peach'); return '🍑 Pesca!'; } },
+  { trophies:5000,  id:'r_5000',  icon:'🪙', label:'+400 monete',           reward:()=>{ coins+=400;                               return '🪙 +400!'; } },
+  { trophies:7000,  id:'r_7000',  icon:'🔮', label:'Skin Lilla',            reward:()=>{ if(!ownedSkins.includes('pastel_lilac')) ownedSkins.push('pastel_lilac'); return '🔮 Lilla!'; } },
+  { trophies:10000, id:'r_10000', icon:'🪸', label:'Skin Corallo + Scudo x5', reward:()=>{ if(!ownedSkins.includes('pastel_coral')) ownedSkins.push('pastel_coral'); inventoryShields+=5; return '🪸 Corallo!'; } },
+  { trophies:14000, id:'r_14000', icon:'✨', label:'Skin Crema + Mega Pack', reward:()=>{ if(!ownedSkins.includes('pastel_cream')) ownedSkins.push('pastel_cream'); inventoryShields+=5; inventorySlows+=5; coins+=1000; return '✨ Crema Leggendaria!'; } },
+  { trophies:20000, id:'r_20000', icon:'🛸', label:'🛸 Materia Cosmica',     reward:()=>{ if(!ownedSkins.includes('cosmic')) ownedSkins.push('cosmic'); inventoryShields+=10; inventorySlows+=10; inventoryPush+=5; inventoryFreeze+=5; coins+=3000; return '🛸 MATERIA COSMICA!'; } }
 ];
 
 function getNextMilestone() { return rewardMilestones.find(m => totalTrophies < m.trophies) || rewardMilestones[rewardMilestones.length-1]; }
@@ -1229,7 +1223,7 @@ function checkTrophyMilestones() {
 }
 
 function addTrophies(n) {
-  totalTrophies = Math.min(100000, totalTrophies + n);
+  totalTrophies = Math.min(20000, totalTrophies + n);
   document.getElementById('trophies').innerText = totalTrophies;
   const rew = checkTrophyMilestones();
   if (rew) showRewardNotification(rew);
@@ -1256,6 +1250,49 @@ function updateProfileBadge() {
 }
 
 // ═══════════════════════════════════════════════════════════
+//  VERSIONE & NOVITÀ AGGIORNAMENTO
+// ═══════════════════════════════════════════════════════════
+const GAME_VERSION = '1.1.0';
+const CHANGELOG_LATEST = [
+  '🔁 Il gioco è stato rinominato in <strong>"Cubix"</strong>!',
+  '⚡ Trofei più rapidi: ora guadagni <strong>5 trofei ogni 5 punti</strong> fatti (prima ne servivano 10).',
+  '🏆 Percorso Trofei rinnovato: tetto massimo a <strong>20.000 coppe</strong>, premi più vicini tra loro e via via più ricchi, e una sorpresa speciale all\'ultimo traguardo! Il percorso si allungherà con i prossimi aggiornamenti.'
+];
+
+function checkChangelog() {
+  const lastSeen = localStorage.getItem('cp_last_version');
+  const isReturningPlayer = !!localStorage.getItem('cp_welcome_seen');
+  if (isReturningPlayer && lastSeen !== GAME_VERSION) {
+    showChangelogPopup();
+  }
+  localStorage.setItem('cp_last_version', GAME_VERSION);
+}
+
+function showChangelogPopup() {
+  const overlay = document.createElement('div');
+  overlay.id = 'changelog-overlay';
+  overlay.style.cssText = [
+    'position:fixed','top:0','left:0','width:100%','height:100%',
+    'background:rgba(0,0,0,0.9)','z-index:99997',
+    'display:flex','flex-direction:column',
+    'align-items:center','justify-content:center',
+    'gap:16px','text-align:center','padding:28px',
+    'font-family:Space Grotesk,sans-serif'
+  ].join(';');
+
+  const itemsHtml = CHANGELOG_LATEST.map(c => `<li style="margin-bottom:12px;">${c}</li>`).join('');
+
+  overlay.innerHTML = `
+    <div style="font-size:2.6rem;">🆕</div>
+    <div style="font-size:1.4rem;font-weight:700;background:linear-gradient(135deg,#00f0ff,#a855f7,#ff2a5f);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-0.5px;">NOVITÀ DELL'AGGIORNAMENTO</div>
+    <ul style="list-style:none;padding:18px 20px;margin:0;max-width:300px;text-align:left;font-size:0.85rem;color:#cbd5e1;line-height:1.5;background:#111622;border:1px solid #1f293d;border-radius:18px;">${itemsHtml}</ul>
+    <button id="changelog-close-btn" style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;padding:14px 32px;border-radius:18px;font-size:1rem;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 0 24px rgba(16,185,129,0.35);">OK, fantastico! 🚀</button>
+  `;
+  document.body.appendChild(overlay);
+  document.getElementById('changelog-close-btn').addEventListener('click', () => overlay.remove());
+}
+
+// ═══════════════════════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════════════════════
 document.getElementById('coins').innerText    = coins;
@@ -1265,6 +1302,7 @@ updateProfileBadge();
 checkDailyReset();
 migrateLegacyData();
 initWelcomeScreen();
+checkChangelog();
 
 function migrateLegacyData() {
   const oldToNew = { shield_15:'r_15', slow_30:'r_30', coins_50:'r_50', emerald_100:'r_100' };
@@ -1368,7 +1406,8 @@ function renderProfileDropdown() {
     const item = document.createElement('div');
     item.className = 'profile-skin-item' + (sel?' selected':'');
     item.onclick = () => selectSkinFromProfile(id);
-    item.innerHTML = `<div class="skin-preview" style="background:${getSkinColorStyle(sk)};box-shadow:0 0 8px ${sk.color==='rainbow'?'#a855f7':sk.color};"></div><div class="skin-info"><div class="skin-name">${sk.name}</div><div class="skin-tag">${getSkinSourceLabel(sk.source)}</div></div>${sel?'<span class="skin-check">✓ IN USO</span>':''}`;
+    const glowColor = (sk.color==='rainbow'||sk.color==='cosmic') ? '#a855f7' : (sk.color==='glitch' ? '#00f0ff' : sk.color);
+    item.innerHTML = `<div class="skin-preview" style="background:${getSkinColorStyle(sk)};box-shadow:0 0 8px ${glowColor};"></div><div class="skin-info"><div class="skin-name">${sk.name}</div><div class="skin-tag">${getSkinSourceLabel(sk.source)}</div></div>${sel?'<span class="skin-check">✓ IN USO</span>':''}`;
     list.appendChild(item);
   });
 }
@@ -1664,9 +1703,9 @@ function claimMission(id, reward) { if(msnStates[id]===1){ msnStates[id]=2; coin
 // ═══════════════════════════════════════════════════════════
 function renderTrophyRoad() {
   document.getElementById('road-trophy-count').innerText = totalTrophies.toLocaleString('it-IT');
-  const next=getNextMilestone(), prev=getPrevMilestone(), atMax=totalTrophies>=100000;
+  const next=getNextMilestone(), prev=getPrevMilestone(), atMax=totalTrophies>=20000;
   const hint=document.getElementById('road-next-hint'), fill=document.getElementById('road-progress-fill');
-  if (atMax) { hint.innerText='Leggenda — 100.000 coppe!'; fill.style.width='100%'; }
+  if (atMax) { hint.innerText='Leggenda — 20.000 coppe! Il percorso si allungherà con i prossimi aggiornamenti.'; fill.style.width='100%'; }
   else {
     hint.innerText=`Prossimo: ${next.icon} ${next.label} · mancano ${(next.trophies-totalTrophies).toLocaleString('it-IT')} coppe`;
     const pct=next.trophies>prev.trophies?Math.min(100,Math.max(0,((totalTrophies-prev.trophies)/(next.trophies-prev.trophies))*100)):0;
@@ -1676,7 +1715,7 @@ function renderTrophyRoad() {
   let marked=false;
   rewardMilestones.forEach((m,i)=>{
     if (!marked&&totalTrophies<m.trophies) { const mk=document.createElement('div'); mk.className='tr-here-marker'; mk.innerHTML=`<div class="here-dot"></div><div class="here-text">Sei qui · ${totalTrophies.toLocaleString('it-IT')} coppe</div>`; list.appendChild(mk); marked=true; }
-    const claimed=!!unlockedRewards[m.id], isNext=!atMax&&next.id===m.id, isLocked=!claimed&&totalTrophies<m.trophies&&!isNext, isLegend=m.trophies>=50000, lineDone=totalTrophies>=m.trophies;
+    const claimed=!!unlockedRewards[m.id], isNext=!atMax&&next.id===m.id, isLocked=!claimed&&totalTrophies<m.trophies&&!isNext, isLegend=m.trophies>=20000, lineDone=totalTrophies>=m.trophies;
     let cls='tr-item'; if(claimed)cls+=' claimed'; else if(isNext)cls+=' next'; else if(isLocked)cls+=' locked'; if(isLegend)cls+=' legend';
     let stat,badge;
     if(claimed){stat='Premio ottenuto';badge='✓ Preso';}
@@ -1687,7 +1726,11 @@ function renderTrophyRoad() {
     item.innerHTML=`<div class="tr-rail"><div class="tr-cup">${formatTrophies(m.trophies)}</div>${i<rewardMilestones.length-1?`<div class="tr-line${lineDone?' done':''}"></div>`:''}</div><div class="tr-card"><div class="tr-icon">${m.icon}</div><div class="tr-body"><div class="tr-name">${m.label}</div><div class="tr-status">${stat}</div></div><div class="tr-badge">${badge}</div></div>`;
     list.appendChild(item);
   });
-  if (!marked&&atMax) { const mk=document.createElement('div'); mk.className='tr-here-marker'; mk.innerHTML=`<div class="here-dot"></div><div class="here-text">Leggenda · 100.000!</div>`; list.appendChild(mk); }
+  if (!marked&&atMax) { const mk=document.createElement('div'); mk.className='tr-here-marker'; mk.innerHTML=`<div class="here-dot"></div><div class="here-text">Leggenda · 20.000!</div>`; list.appendChild(mk); }
+  const futureNote=document.createElement('div');
+  futureNote.style.cssText='margin:14px 4px 4px;padding:14px 16px;border-radius:14px;background:rgba(168,85,247,0.08);border:1px dashed rgba(168,85,247,0.35);font-size:0.78rem;color:#c4b5fd;text-align:center;line-height:1.5;';
+  futureNote.innerHTML='🚀 Il percorso si allungherà con i prossimi aggiornamenti!';
+  list.appendChild(futureNote);
   requestAnimationFrame(()=>{ const wrap=document.getElementById('road-list-wrap'),here=list.querySelector('.tr-here-marker'); if(here&&wrap)here.scrollIntoView({block:'center',behavior:'auto'}); });
 }
 
@@ -2048,6 +2091,12 @@ function gameLoop(timestamp) {
       const glitchColors = ['#ff2a5f','#00f0ff','#a855f7','#ffb700','#10b981','#ffffff'];
       const glitchIdx = Math.floor((Date.now() / 80)) % glitchColors.length;
       playerColor = glitchColors[glitchIdx];
+    } else if (sk.color === 'cosmic') {
+      rainbowHue = (rainbowHue + 220*dt) % 360;
+      playerColor = `hsl(${rainbowHue},100%,65%)`;
+      if (Math.random() < 0.35) {
+        createExplosion(player.x, player.y, `hsl(${(rainbowHue+150)%360},100%,72%)`, 1);
+      }
     } else {
       playerColor = sk.color;
     }
