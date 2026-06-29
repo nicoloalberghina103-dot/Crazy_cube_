@@ -397,6 +397,8 @@ canvas {
 .profile-skin-item .skin-name { font-size: 0.88rem; font-weight: 700; color: #fff; }
 .profile-skin-item .skin-tag { font-size: 0.65rem; color: #5c6b84; margin-top: 1px; }
 .profile-skin-item .skin-check { font-size: 0.75rem; font-weight: 700; color: #00f0ff; }
+.skin-customize-btn { font-size: 0.95rem; padding: 4px 7px; border-radius: 8px; background: rgba(168,85,247,0.18); cursor: pointer; flex-shrink: 0; margin-right: 2px; }
+.skin-customize-btn:active { transform: scale(0.9); }
 .profile-skin-empty { color: #5c6b84; font-size: 0.85rem; padding: 20px; text-align: center; }
 .profile-dd-close { background: #1f293d; color: #9ca3af; border: 1px solid #374151; border-radius: 12px; padding: 10px; font-size: 0.85rem; font-weight: 700; cursor: pointer; width: 100%; }
 .profile-dd-delete { background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.45); border-radius: 12px; padding: 10px; font-size: 0.85rem; font-weight: 700; cursor: pointer; width: 100%; }
@@ -480,6 +482,24 @@ canvas {
   display: none; font-size: 2rem;
   transform: translate(-50%,-50%);
   filter: drop-shadow(0 0 12px rgba(0,240,255,0.8));
+}
+
+/* ─── 🔧 GOD MODE (pulsante invisibile dev, in basso a sinistra) ─── */
+#btn-god-mode {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 30px;
+  height: 30px;
+  opacity: 0.35;
+  background: rgba(0,0,0,0.55);
+  border: none;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  z-index: 10000;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* ─── IMPULSE WAVE ANIMATION ─── */
@@ -690,6 +710,9 @@ canvas {
 
   <!-- DRAG GHOST -->
   <div id="drag-ghost"></div>
+
+  <!-- 🔧 GOD MODE — pulsante invisibile per sviluppatori (in basso a sinistra) -->
+  <button id="btn-god-mode" aria-hidden="true" tabindex="-1"></button>
 
   <!-- ══════════════════════════════════════════ -->
   <!--  BOTTONE INVITA UN AMICO (FAB)            -->
@@ -1015,17 +1038,19 @@ const ABILITIES = {
 // ═══════════════════════════════════════════════════════════
 //  SAVE / STATE
 // ═══════════════════════════════════════════════════════════
+const TROPHY_CAP = 20000;
 let coins          = parseInt(localStorage.getItem('cp_coins'))        || 0;
 let highScore      = parseInt(localStorage.getItem('cp_highscore'))    || 0;
 let inventoryShields = parseInt(localStorage.getItem('cp_inv_shields'))|| 0;
 let inventorySlows   = parseInt(localStorage.getItem('cp_inv_slows'))  || 0;
 let inventoryPush    = parseInt(localStorage.getItem('cp_inv_push'))   || 0;
 let inventoryFreeze  = parseInt(localStorage.getItem('cp_inv_freeze')) || 0;
-let totalTrophies  = Math.min(20000, parseInt(localStorage.getItem('cp_trophies')) || 0);
+let totalTrophies  = Math.min(TROPHY_CAP, parseInt(localStorage.getItem('cp_trophies')) || 0);
 let unlockedRewards= JSON.parse(localStorage.getItem('cp_unlocked_rewards')) || {};
 let currentSkinId  = localStorage.getItem('cp_currentSkin')  || 'white';
 let ownedSkins     = JSON.parse(localStorage.getItem('cp_ownedSkins')) || ['white'];
 let playerName     = localStorage.getItem('cp_playerName')   || '';
+let cosmicStyle    = localStorage.getItem('cp_cosmicStyle')   || 'aurora';
 
 // Loadout: which ability id is in slot 1/2 (null = empty)
 let loadoutSlot1   = localStorage.getItem('cp_loadout_s1') || null;
@@ -1052,6 +1077,7 @@ function saveData() {
   localStorage.setItem('cp_ownedSkins',         JSON.stringify(ownedSkins));
   localStorage.setItem('cp_currentSkin',        currentSkinId);
   localStorage.setItem('cp_playerName',         playerName);
+  localStorage.setItem('cp_cosmicStyle',        cosmicStyle);
   localStorage.setItem('cp_msn_stats',          JSON.stringify(msnStats));
   localStorage.setItem('cp_msn_states',         JSON.stringify(msnStates));
   localStorage.setItem('cp_msn_daily',          JSON.stringify(msnDailyCounters));
@@ -1137,11 +1163,21 @@ const trophySkinDatabase = [
 ];
 function getAllSkins()         { return [...shopSkinDatabase, ...trophySkinDatabase]; }
 function getSkinById(id)       { return getAllSkins().find(s => s.id === id); }
+
+// ─── Stili personalizzabili per la skin 🛸 Materia Cosmica (come gli "stili" delle skin di Fortnite) ───
+const COSMIC_STYLES = [
+  { id:'aurora',  name:'🌌 Aurora',       hueMin:0,   hueMax:360, swatch:'conic-gradient(from 0deg,#ff2a5f,#a855f7,#00f0ff,#10b981,#ffb700,#ff2a5f)' },
+  { id:'inferno', name:'🔥 Inferno',      hueMin:0,   hueMax:45,  swatch:'linear-gradient(135deg,#ff2a5f,#ff7a00,#ffd700)' },
+  { id:'abisso',  name:'🌊 Abisso',       hueMin:175, hueMax:225, swatch:'linear-gradient(135deg,#00f0ff,#0284c7,#10b981)' },
+  { id:'oro',     name:'👑 Oro Cosmico',  hueMin:42,  hueMax:54,  swatch:'linear-gradient(135deg,#ffd700,#fff5d6,#f59e0b)' }
+];
+function getCosmicStyle() { return COSMIC_STYLES.find(s => s.id === cosmicStyle) || COSMIC_STYLES[0]; }
+
 function getSkinColorStyle(sk) {
   if (!sk) return '#fff';
   if (sk.color === 'rainbow') return 'linear-gradient(to right,red,orange,yellow,green,blue,violet)';
   if (sk.color === 'glitch')  return 'linear-gradient(135deg,#ff2a5f,#00f0ff,#a855f7,#ffb700)';
-  if (sk.color === 'cosmic')  return 'conic-gradient(from 0deg,#ff2a5f,#a855f7,#00f0ff,#10b981,#ffb700,#ff2a5f)';
+  if (sk.color === 'cosmic')  return getCosmicStyle().swatch;
   return sk.color;
 }
 function getSkinSourceLabel(src){
@@ -1223,7 +1259,7 @@ function checkTrophyMilestones() {
 }
 
 function addTrophies(n) {
-  totalTrophies = Math.min(20000, totalTrophies + n);
+  totalTrophies = Math.min(TROPHY_CAP, totalTrophies + n);
   document.getElementById('trophies').innerText = totalTrophies;
   const rew = checkTrophyMilestones();
   if (rew) showRewardNotification(rew);
@@ -1248,6 +1284,152 @@ function updateProfileBadge() {
   const b = document.getElementById('profile-trophy-badge');
   if (b) b.innerText = formatTrophies(totalTrophies);
 }
+
+// ═══════════════════════════════════════════════════════════
+//  🔧 GOD MODE — modalità sviluppatore per i test
+// ═══════════════════════════════════════════════════════════
+const GOD_MODE_CODE = 'Mood_10';
+let isGodModeActive = false;
+let originalPlayerData = null;
+
+function refreshAllUIAfterGodMode() {
+  document.getElementById('coins').innerText    = coins;
+  document.getElementById('trophies').innerText = totalTrophies;
+  updateProfileBadge();
+  updateMenuHighScoreDisplay();
+  updateShopUI();
+  renderShopSkins();
+  renderMissions();
+  renderTrophyRoad();
+  renderLoadout();
+  renderProfileDropdown();
+}
+
+function activateGodMode() {
+  // 1) Backup profondo dei dati reali del giocatore prima di alterare qualsiasi cosa
+  originalPlayerData = {
+    coins:            coins,
+    totalTrophies:    totalTrophies,
+    inventoryShields: inventoryShields,
+    inventorySlows:   inventorySlows,
+    inventoryPush:    inventoryPush,
+    inventoryFreeze:  inventoryFreeze,
+    ownedSkins:       JSON.parse(JSON.stringify(ownedSkins)),
+    currentSkinId:    currentSkinId,
+    unlockedRewards:  JSON.parse(JSON.stringify(unlockedRewards))
+  };
+
+  // 2) Sblocca tutto al massimo
+  coins             = 999999;
+  inventoryShields  = 999;
+  inventorySlows    = 999;
+  inventoryPush     = 999;
+  inventoryFreeze   = 999;
+  ownedSkins        = getAllSkins().map(s => s.id);           // tutte le skin possedute
+  totalTrophies     = TROPHY_CAP;                              // percorso trofei completato
+  rewardMilestones.forEach(m => { unlockedRewards[m.id] = true; }); // tutti i traguardi segnati come riscattati
+
+  isGodModeActive = true;
+  saveData();
+  refreshAllUIAfterGodMode();
+  console.log('%c👑 GOD MODE ATTIVATA — tutto sbloccato', 'color:#ffd700;font-weight:700;font-size:13px;');
+  showGodModeStatusPopup(true);
+}
+
+function deactivateGodMode() {
+  if (!originalPlayerData) { isGodModeActive = false; return; }
+
+  // Ripristina esattamente lo stato precedente all'attivazione
+  coins            = originalPlayerData.coins;
+  totalTrophies    = originalPlayerData.totalTrophies;
+  inventoryShields = originalPlayerData.inventoryShields;
+  inventorySlows   = originalPlayerData.inventorySlows;
+  inventoryPush    = originalPlayerData.inventoryPush;
+  inventoryFreeze  = originalPlayerData.inventoryFreeze;
+  ownedSkins       = originalPlayerData.ownedSkins;
+  unlockedRewards  = originalPlayerData.unlockedRewards;
+  if (!ownedSkins.includes(currentSkinId)) currentSkinId = originalPlayerData.currentSkinId || 'white';
+
+  originalPlayerData = null;
+  isGodModeActive = false;
+  saveData();
+  refreshAllUIAfterGodMode();
+  console.log('%c↩️ GOD MODE DISATTIVATA — stato originale ripristinato', 'color:#00f0ff;font-weight:700;font-size:13px;');
+  showGodModeStatusPopup(false);
+}
+
+// ─── Popup di conferma attivazione/disattivazione ───
+function showGodModeStatusPopup(activated) {
+  const overlay = document.createElement('div');
+  overlay.id = 'godmode-status-overlay';
+  overlay.style.cssText = [
+    'position:fixed','top:0','left:0','width:100%','height:100%',
+    'background:rgba(0,0,0,0.92)','z-index:99996',
+    'display:flex','flex-direction:column','align-items:center','justify-content:center',
+    'gap:16px','text-align:center','padding:28px',
+    'font-family:Space Grotesk,sans-serif'
+  ].join(';');
+
+  const icon  = activated ? '👑' : '↩️';
+  const title = activated ? 'GOD MODE ATTIVATA' : 'GOD MODE DISATTIVATA';
+  const desc  = activated
+    ? 'Tutto è stato sbloccato al massimo: monete, abilità, skin e Percorso Trofei. Inserisci di nuovo lo stesso codice quando vuoi tornare al tuo stato originale.'
+    : 'Il tuo stato originale (monete, abilità, skin, trofei) è stato ripristinato esattamente come lo avevi lasciato prima del test.';
+  const grad  = activated ? 'linear-gradient(135deg,#ffd700,#ff8c00)' : 'linear-gradient(135deg,#00f0ff,#0284c7)';
+
+  overlay.innerHTML = `
+    <div style="font-size:3rem;">${icon}</div>
+    <div style="font-size:1.3rem;font-weight:700;background:${grad};-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-0.5px;">${title}</div>
+    <div style="font-size:0.85rem;color:#9ca3af;max-width:280px;line-height:1.55;">${desc}</div>
+    <button id="godmode-status-close" style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;padding:13px 30px;border-radius:16px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 0 22px rgba(16,185,129,0.35);">OK</button>
+  `;
+  document.body.appendChild(overlay);
+  document.getElementById('godmode-status-close').addEventListener('click', () => overlay.remove());
+}
+
+// ─── Schermata personalizzata per l'inserimento del codice (sostituisce il prompt di sistema) ───
+function showGodModeCodeInput() {
+  const overlay = document.createElement('div');
+  overlay.id = 'godmode-code-overlay';
+  overlay.style.cssText = [
+    'position:fixed','top:0','left:0','width:100%','height:100%',
+    'background:rgba(0,0,0,0.93)','z-index:99998',
+    'display:flex','flex-direction:column','align-items:center','justify-content:center',
+    'gap:16px','padding:28px','font-family:Space Grotesk,sans-serif'
+  ].join(';');
+
+  overlay.innerHTML = `
+    <div style="font-size:2rem;">🔧</div>
+    <div style="font-size:1.05rem;font-weight:700;color:#9ca3af;letter-spacing:1px;text-transform:uppercase;">Accesso Sviluppatore</div>
+    <input id="godmode-code-field" type="password" placeholder="Codice di accesso" autocomplete="off" autocapitalize="off" spellcheck="false"
+      style="width:220px;text-align:center;padding:12px 14px;font-size:1rem;font-family:inherit;background:#111622;border:1px solid #2e3a50;border-radius:12px;color:#fff;outline:none;" />
+    <div style="display:flex;gap:10px;width:220px;">
+      <button id="godmode-cancel-btn" style="flex:1;background:#1f293d;color:#9ca3af;border:1px solid #374151;border-radius:12px;padding:11px;font-size:0.85rem;font-weight:700;cursor:pointer;font-family:inherit;">Annulla</button>
+      <button id="godmode-confirm-btn" style="flex:1;background:linear-gradient(135deg,#00f0ff,#0284c7);color:#080b11;border:none;border-radius:12px;padding:11px;font-size:0.85rem;font-weight:700;cursor:pointer;font-family:inherit;">OK</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  const field = document.getElementById('godmode-code-field');
+  field.focus();
+
+  function submit() {
+    const value = field.value;
+    overlay.remove();
+    if (value !== GOD_MODE_CODE) return; // codice errato: nessuna azione, nessun indizio
+    if (!isGodModeActive) activateGodMode();
+    else                  deactivateGodMode();
+  }
+  function cancel() { overlay.remove(); }
+
+  document.getElementById('godmode-confirm-btn').addEventListener('click', submit);
+  document.getElementById('godmode-cancel-btn').addEventListener('click', cancel);
+  field.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); if (e.key === 'Escape') cancel(); });
+}
+
+document.getElementById('btn-god-mode').addEventListener('click', function() {
+  showGodModeCodeInput();
+});
 
 // ═══════════════════════════════════════════════════════════
 //  VERSIONE & NOVITÀ AGGIORNAMENTO
@@ -1405,13 +1587,56 @@ function renderProfileDropdown() {
     const sel = currentSkinId === id;
     const item = document.createElement('div');
     item.className = 'profile-skin-item' + (sel?' selected':'');
-    item.onclick = () => selectSkinFromProfile(id);
+    item.onclick = (e) => { if (e.target.closest('.skin-customize-btn')) return; selectSkinFromProfile(id); };
     const glowColor = (sk.color==='rainbow'||sk.color==='cosmic') ? '#a855f7' : (sk.color==='glitch' ? '#00f0ff' : sk.color);
-    item.innerHTML = `<div class="skin-preview" style="background:${getSkinColorStyle(sk)};box-shadow:0 0 8px ${glowColor};"></div><div class="skin-info"><div class="skin-name">${sk.name}</div><div class="skin-tag">${getSkinSourceLabel(sk.source)}</div></div>${sel?'<span class="skin-check">✓ IN USO</span>':''}`;
+    const customizeBtn = id === 'cosmic' ? `<span class="skin-customize-btn" title="Personalizza stile">🎨</span>` : '';
+    item.innerHTML = `<div class="skin-preview" style="background:${getSkinColorStyle(sk)};box-shadow:0 0 8px ${glowColor};"></div><div class="skin-info"><div class="skin-name">${sk.name}</div><div class="skin-tag">${getSkinSourceLabel(sk.source)}</div></div>${customizeBtn}${sel?'<span class="skin-check">✓ IN USO</span>':''}`;
+    if (id === 'cosmic') {
+      item.querySelector('.skin-customize-btn').addEventListener('click', (e) => { e.stopPropagation(); openCosmicStyleSelector(); });
+    }
     list.appendChild(item);
   });
 }
 function selectSkinFromProfile(id) { if(!ownedSkins.includes(id))return; currentSkinId=id; saveData(); renderProfileDropdown(); }
+
+// ─── Selettore stile 🛸 Materia Cosmica (varianti di colore selezionabili, come gli "stili" delle skin di Fortnite) ───
+function openCosmicStyleSelector() {
+  const overlay = document.createElement('div');
+  overlay.id = 'cosmic-style-overlay';
+  overlay.style.cssText = [
+    'position:fixed','top:0','left:0','width:100%','height:100%',
+    'background:rgba(0,0,0,0.9)','z-index:99996',
+    'display:flex','flex-direction:column','align-items:center','justify-content:center',
+    'gap:14px','text-align:center','padding:28px',
+    'font-family:Space Grotesk,sans-serif'
+  ].join(';');
+
+  const swatchesHtml = COSMIC_STYLES.map(s => `
+    <div class="cosmic-style-swatch" data-style="${s.id}" style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:14px;border:2px solid ${s.id===cosmicStyle?'#00f0ff':'#1f293d'};background:${s.id===cosmicStyle?'rgba(0,240,255,0.08)':'#111622'};cursor:pointer;width:240px;">
+      <div style="width:32px;height:32px;border-radius:50%;background:${s.swatch};flex-shrink:0;box-shadow:0 0 10px rgba(168,85,247,0.45);"></div>
+      <div style="flex:1;text-align:left;font-size:0.85rem;font-weight:700;color:#fff;">${s.name}</div>
+      ${s.id===cosmicStyle ? '<span style="color:#00f0ff;font-size:0.78rem;font-weight:700;">✓</span>' : ''}
+    </div>`).join('');
+
+  overlay.innerHTML = `
+    <div style="font-size:2.2rem;">🛸</div>
+    <div style="font-size:1.15rem;font-weight:700;background:linear-gradient(135deg,#00f0ff,#a855f7,#ff2a5f);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-0.5px;">PERSONALIZZA LA SKIN</div>
+    <div style="font-size:0.78rem;color:#9ca3af;max-width:260px;margin-bottom:6px;line-height:1.4;">Scegli la palette di colori per "Materia Cosmica" — proprio come gli stili alternativi delle skin di Fortnite!</div>
+    <div style="display:flex;flex-direction:column;gap:10px;">${swatchesHtml}</div>
+    <button id="cosmic-style-close" style="margin-top:10px;background:#1f293d;color:#9ca3af;border:1px solid #374151;border-radius:14px;padding:11px 26px;font-size:0.85rem;font-weight:700;cursor:pointer;font-family:inherit;">Chiudi</button>
+  `;
+  document.body.appendChild(overlay);
+
+  overlay.querySelectorAll('.cosmic-style-swatch').forEach(el => {
+    el.addEventListener('click', () => {
+      cosmicStyle = el.dataset.style;
+      saveData();
+      overlay.remove();
+      renderProfileDropdown();
+    });
+  });
+  document.getElementById('cosmic-style-close').addEventListener('click', () => overlay.remove());
+}
 function deleteAccount() {
   if (gameActive) { alert('Termina la partita prima di eliminare.'); return; }
   if (!confirm('Eliminare account?\n\nCancella TUTTO: record, monete, skin, trofei, missioni.\nIrreversibile.')) return;
@@ -1703,7 +1928,7 @@ function claimMission(id, reward) { if(msnStates[id]===1){ msnStates[id]=2; coin
 // ═══════════════════════════════════════════════════════════
 function renderTrophyRoad() {
   document.getElementById('road-trophy-count').innerText = totalTrophies.toLocaleString('it-IT');
-  const next=getNextMilestone(), prev=getPrevMilestone(), atMax=totalTrophies>=20000;
+  const next=getNextMilestone(), prev=getPrevMilestone(), atMax=totalTrophies>=TROPHY_CAP;
   const hint=document.getElementById('road-next-hint'), fill=document.getElementById('road-progress-fill');
   if (atMax) { hint.innerText='Leggenda — 20.000 coppe! Il percorso si allungherà con i prossimi aggiornamenti.'; fill.style.width='100%'; }
   else {
@@ -2092,10 +2317,12 @@ function gameLoop(timestamp) {
       const glitchIdx = Math.floor((Date.now() / 80)) % glitchColors.length;
       playerColor = glitchColors[glitchIdx];
     } else if (sk.color === 'cosmic') {
+      const cStyle = getCosmicStyle();
       rainbowHue = (rainbowHue + 220*dt) % 360;
-      playerColor = `hsl(${rainbowHue},100%,65%)`;
+      const cosmicHue = cStyle.hueMin + (rainbowHue/360) * (cStyle.hueMax - cStyle.hueMin);
+      playerColor = `hsl(${cosmicHue},100%,65%)`;
       if (Math.random() < 0.35) {
-        createExplosion(player.x, player.y, `hsl(${(rainbowHue+150)%360},100%,72%)`, 1);
+        createExplosion(player.x, player.y, `hsl(${(cosmicHue+30)%360},100%,72%)`, 1);
       }
     } else {
       playerColor = sk.color;
@@ -2398,7 +2625,7 @@ setInterval(() => {
       konamiIdx++;
       if (konamiIdx === KONAMI.length) {
         konamiIdx = 0;
-        activateGodMode();
+        activateSecretSkinEasterEgg();
       }
     } else {
       konamiIdx = e.key === KONAMI[0] ? 1 : 0;
@@ -2414,13 +2641,13 @@ setInterval(() => {
     clearTimeout(logoTapTimer);
     if (logoTaps >= 5) {
       logoTaps = 0;
-      activateGodMode();
+      activateSecretSkinEasterEgg();
     } else {
       logoTapTimer = setTimeout(function() { logoTaps = 0; }, 1200);
     }
   });
 
-  function activateGodMode() {
+  function activateSecretSkinEasterEgg() {
     if (godActive) return;
     godActive = true;
     const alreadyOwned = ownedSkins.includes('glitch');
