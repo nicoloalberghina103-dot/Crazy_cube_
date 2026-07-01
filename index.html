@@ -387,47 +387,6 @@ canvas {
 .profile-name-label { font-size: 0.68rem; color: #5c6b84; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; display: block; }
 .profile-name-input { width: 100%; padding: 8px 10px; background: #0d111a; border: 1px solid rgba(0,240,255,0.3); border-radius: 8px; color: #fff; font-size: 0.95rem; font-family: 'Space Grotesk', sans-serif; }
 .profile-name-input:focus { outline: none; border-color: #00f0ff; }
-#btn-open-leaderboard {
-  flex-shrink: 0; width: 36px; height: 36px;
-  background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,140,0,0.12));
-  border: 1px solid rgba(255,215,0,0.5); border-radius: 8px;
-  font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
-  transition: transform 0.12s; -webkit-tap-highlight-color: transparent;
-}
-#btn-open-leaderboard:active { transform: scale(0.88); }
-
-/* ─── Tendina classifica ─── */
-#leaderboard-dropdown {
-  position: absolute; left: 50%; transform: translateX(-50%);
-  top: calc(100% + 6px);
-  width: calc(100% - 32px);
-  max-width: 320px;
-  background: linear-gradient(160deg, #12192a 0%, #0d111a 100%);
-  border: 1px solid rgba(255,215,0,0.35);
-  border-radius: 16px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.7), 0 0 30px rgba(255,215,0,0.08);
-  padding: 14px 14px 10px;
-  z-index: 50;
-  display: none;
-}
-#leaderboard-dropdown.open { display: block; }
-#leaderboard-dropdown .lb-title {
-  font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 2px; color: #ffd700; text-align: center;
-  margin-bottom: 10px;
-}
-#leaderboard-dropdown .lb-row {
-  display: flex; align-items: center; gap: 8px;
-  padding: 7px 10px; border-radius: 10px;
-  border: 1px solid #1f293d; background: rgba(255,255,255,0.02);
-  margin-bottom: 6px; font-size: 0.82rem;
-}
-#leaderboard-dropdown .lb-pos  { color: #ffd700; font-weight: 700; min-width: 22px; flex-shrink: 0; }
-#leaderboard-dropdown .lb-name { flex: 1; color: #fff; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-#leaderboard-dropdown .lb-pts  { color: #00f0ff; font-weight: 700; flex-shrink: 0; font-size: 0.78rem; }
-#leaderboard-dropdown .lb-ban  { color: #ff4444; font-weight: 700; cursor: pointer; font-size: 0.72rem; flex-shrink: 0; padding: 2px 5px; border-radius: 5px; background: rgba(255,68,68,0.1); }
-#leaderboard-dropdown .lb-empty { color: #2e3a50; font-size: 0.82rem; }
-#leaderboard-dropdown .lb-loading { color: #5c6b84; font-size: 0.8rem; text-align: center; padding: 8px 0; }
 .profile-skin-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; max-height: 220px; }
 .profile-skin-list::-webkit-scrollbar { width: 4px; }
 .profile-skin-list::-webkit-scrollbar-thumb { background: rgba(0,240,255,0.3); border-radius: 4px; }
@@ -826,16 +785,7 @@ canvas {
     <div id="profile-dropdown">
       <div class="profile-name-section">
         <label class="profile-name-label">Il tuo nome</label>
-        <div style="display:flex;gap:8px;align-items:center;">
-          <input type="text" class="profile-name-input" id="profile-name-input" placeholder="Inserisci il tuo nome" maxlength="20" style="flex:1;width:auto;">
-          <button type="button" id="btn-open-leaderboard" onclick="window.mostraClassifica()" title="Classifica globale">🥇</button>
-        </div>
-      </div>
-
-      <!-- Tendina classifica — appare sotto il campo nome -->
-      <div id="leaderboard-dropdown">
-        <div class="lb-title">🏆 TOP 5 — CUBIX</div>
-        <div id="lb-lista"><div class="lb-loading">Caricamento…</div></div>
+        <input type="text" class="profile-name-input" id="profile-name-input" placeholder="Inserisci il tuo nome" maxlength="20">
       </div>
       <div class="profile-dd-stats">
         <div class="profile-stat-card">
@@ -1340,7 +1290,6 @@ function updateProfileBadge() {
 // ═══════════════════════════════════════════════════════════
 const GOD_MODE_CODE = 'Mood_10';
 let isGodModeActive = false;
-window.isGodModeActive = false;   // esposta su window per il modulo Firebase (leaderboard ban)
 let originalPlayerData = null;
 
 function refreshAllUIAfterGodMode() {
@@ -1381,7 +1330,6 @@ function activateGodMode() {
   rewardMilestones.forEach(m => { unlockedRewards[m.id] = true; }); // tutti i traguardi segnati come riscattati
 
   isGodModeActive = true;
-  window.isGodModeActive = true;
   saveData();
   refreshAllUIAfterGodMode();
   console.log('%c👑 GOD MODE ATTIVATA — tutto sbloccato', 'color:#ffd700;font-weight:700;font-size:13px;');
@@ -1389,7 +1337,7 @@ function activateGodMode() {
 }
 
 function deactivateGodMode() {
-  if (!originalPlayerData) { isGodModeActive = false; window.isGodModeActive = false; return; }
+  if (!originalPlayerData) { isGodModeActive = false; return; }
 
   // Ripristina esattamente lo stato precedente all'attivazione
   coins            = originalPlayerData.coins;
@@ -1404,7 +1352,6 @@ function deactivateGodMode() {
 
   originalPlayerData = null;
   isGodModeActive = false;
-  window.isGodModeActive = false;
   saveData();
   refreshAllUIAfterGodMode();
   console.log('%c↩️ GOD MODE DISATTIVATA — stato originale ripristinato', 'color:#00f0ff;font-weight:700;font-size:13px;');
@@ -2573,9 +2520,6 @@ function gameOver() {
 
   updateMissionProgress(); saveData();
 
-  // ─── Invia punteggio alla classifica globale (solo se > 0 e non God Mode) ───
-  if (typeof window.inviaPunteggio === 'function') window.inviaPunteggio(score);
-
   document.getElementById('final-score').innerText = score;
   document.getElementById('final-match-coins').innerText = currentMatchCoins;
   document.getElementById('final-match-trophies').innerText = currentMatchTrophies;
@@ -2790,142 +2734,6 @@ setInterval(() => {
 
 })();
 </script>
-<!-- ═══════════════════════════════════════════════════════════
-     🏆 FIREBASE LEADERBOARD — Classifica Globale Cubix
-     ═══════════════════════════════════════════════════════════ -->
-<script type="module">
-import { initializeApp }                                     from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import { getDatabase, ref, push, query,
-         orderByChild, limitToLast, get, remove }           from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
-
-// ── 1. CONFIGURAZIONE FIREBASE ──────────────────────────────
-//    Incolla qui il tuo firebaseConfig da:
-//    Firebase Console → Impostazioni Progetto → App Web
-const firebaseConfig = {
-  /* INCOLLA QUI IL TUO firebaseConfig DA Firebase Console > Impostazioni Progetto > App Web */
-};
-
-const app = initializeApp(firebaseConfig);
-const db  = getDatabase(app);
-
-// ── 2. UTILITY: etichetta posizione ────────────────────────
-function medagliaPos(pos) {
-  if (pos === 1) return '🥇';
-  if (pos === 2) return '🥈';
-  if (pos === 3) return '🥉';
-  return `${pos}.`;
-}
-
-// ── 3. mostraClassifica() — apre/chiude la tendina toggle ──
-async function mostraClassifica() {
-  const dd   = document.getElementById('leaderboard-dropdown');
-  const lista = document.getElementById('lb-lista');
-  if (!dd || !lista) return;
-
-  // Toggle: se già aperta la chiude
-  if (dd.classList.contains('open')) {
-    dd.classList.remove('open');
-    return;
-  }
-
-  dd.classList.add('open');
-  lista.innerHTML = '<div class="lb-loading">Caricamento…</div>';
-
-  try {
-    const q    = query(ref(db, 'classifica/'), orderByChild('punti'), limitToLast(5));
-    const snap = await get(q);
-    const rows = [];
-    if (snap.exists()) {
-      snap.forEach(child => rows.push({ key: child.key, ...child.val() }));
-      rows.reverse();
-    }
-
-    lista.innerHTML = '';
-    for (let i = 0; i < 5; i++) {
-      const row = document.createElement('div');
-      row.className = 'lb-row';
-      if (rows[i]) {
-        const r = rows[i];
-        const banBtn = window.isGodModeActive
-          ? `<span class="lb-ban" onclick="window.bannaPlayer('${r.key}')" title="Rimuovi">[X]</span>`
-          : '';
-        row.innerHTML = `
-          <span class="lb-pos">${medagliaPos(i+1)}</span>
-          <span class="lb-name">${r.nome}</span>
-          <span class="lb-pts">${r.punti} pt</span>
-          ${banBtn}
-        `;
-      } else {
-        row.innerHTML = `
-          <span class="lb-pos" style="color:#2e3a50;">${i+1}.</span>
-          <span class="lb-name lb-empty">---</span>
-        `;
-      }
-      lista.appendChild(row);
-    }
-  } catch (err) {
-    lista.innerHTML = `<div class="lb-loading" style="color:#f87171;">Errore connessione Firebase.</div>`;
-    console.error('[Cubix Leaderboard]', err);
-  }
-}
-
-// ── 4. chiudiClassifica() ────────────────────────────────────
-function chiudiClassifica() {
-  const dd = document.getElementById('leaderboard-dropdown');
-  if (dd) dd.classList.remove('open');
-}
-
-// ── 5. inviaPunteggio(punti) ─────────────────────────────────
-async function inviaPunteggio(punti) {
-  if (!punti || isNaN(punti) || punti <= 0 || punti > 10000) return;
-  if (window.isGodModeActive) return;
-
-  let nome = (document.getElementById('profile-name-input') || {}).value
-           || localStorage.getItem('cp_playerName') || '';
-  nome = nome.trim();
-  if (!nome) {
-    nome = prompt('📝 Nome per la classifica globale:', 'Player') || '';
-    nome = nome.trim();
-    if (nome) localStorage.setItem('cp_playerName', nome.substring(0, 20));
-  }
-  nome = nome ? nome.substring(0, 12) : 'Anonimo';
-
-  try {
-    await push(ref(db, 'classifica/'), { nome, punti, data: Date.now() });
-  } catch (err) {
-    console.error('[Cubix Leaderboard] Errore invio:', err);
-  }
-}
-
-// ── 6. bannaPlayer(key) ──────────────────────────────────────
-async function bannaPlayer(key) {
-  if (!window.isGodModeActive) return;
-  if (!confirm('Rimuovere questo player dalla classifica?')) return;
-  try {
-    await remove(ref(db, 'classifica/' + key));
-    // Ricarica tendina
-    const dd = document.getElementById('leaderboard-dropdown');
-    if (dd) dd.classList.remove('open');
-    setTimeout(() => mostraClassifica(), 80);
-  } catch (err) {
-    console.error('[Cubix Leaderboard] Errore ban:', err);
-  }
-}
-
-// ── 7. Chiudi tendina cliccando fuori ────────────────────────
-document.addEventListener('click', e => {
-  const dd  = document.getElementById('leaderboard-dropdown');
-  const btn = document.getElementById('btn-open-leaderboard');
-  if (!dd || !dd.classList.contains('open')) return;
-  if (!dd.contains(e.target) && e.target !== btn) chiudiClassifica();
-});
-
-// ── 8. Esponi globalmente ─────────────────────────────────────
-window.mostraClassifica = mostraClassifica;
-window.chiudiClassifica = chiudiClassifica;
-window.inviaPunteggio   = inviaPunteggio;
-window.bannaPlayer      = bannaPlayer;
-
-</script>
 </body>
 </html>
+      
