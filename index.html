@@ -861,6 +861,7 @@ canvas {
         <button class="btn btn-loadout" onclick="openLoadout()">⚡ EQUIPAGGIA ABILITÀ</button>
         <button class="btn btn-missions" onclick="openMissions()">BACHECA MISSIONI</button>
         <button class="btn btn-shop" onclick="openShop()">NEGOZIO HANGAR</button>
+       
       </div>
       <div class="credits-container">
         <button id="btn-credits" onclick="toggleCredits()">Il Nostro Team...</button>
@@ -2801,17 +2802,9 @@ import { getDatabase, ref, push, query,
 // ── 1. CONFIGURAZIONE FIREBASE ──────────────────────────────
 //    Incolla qui il tuo firebaseConfig da:
 //    Firebase Console → Impostazioni Progetto → App Web
-
-  const firebaseConfig = {
-  apiKey: "AIzaSyBc4eSHNihp3i7yjM056fSDibvRaKQz70Y",
-  authDomain: "cubix-cec11.firebaseapp.com",
-  databaseURL: "https://cubix-cec11-default-rtdb.firebaseio.com",
-  projectId: "cubix-cec11",
-  storageBucket: "cubix-cec11.firebasestorage.app",
-  messagingSenderId: "175803848584",
-  appId: "1:175803848584:web:d7a9f1f5a0afde3c36cc3d"
+const firebaseConfig = {
+  /* INCOLLA QUI IL TUO firebaseConfig DA Firebase Console > Impostazioni Progetto > App Web */
 };
-
 
 const app = initializeApp(firebaseConfig);
 const db  = getDatabase(app);
@@ -2828,7 +2821,7 @@ function medagliaPos(pos) {
 async function mostraClassifica() {
   const dd   = document.getElementById('leaderboard-dropdown');
   const lista = document.getElementById('lb-lista');
-  if (!dd || !lista) return;
+  if (!dd || !lista) return; 
 
   // Toggle: se già aperta la chiude
   if (dd.classList.contains('open')) {
@@ -2876,6 +2869,9 @@ async function mostraClassifica() {
     console.error('[Cubix Leaderboard]', err);
   }
 }
+// ESPONI FUNZIONI PER I BOTTONI HTML
+window.mostraClassifica = mostraClassifica;
+window.chiudiClassifica = chiudiClassifica;
 
 // ── 4. chiudiClassifica() ────────────────────────────────────
 function chiudiClassifica() {
